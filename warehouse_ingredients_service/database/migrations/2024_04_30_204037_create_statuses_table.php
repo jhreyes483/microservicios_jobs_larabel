@@ -25,7 +25,8 @@ class CreateStatusesTable extends Migration
         DB::table('statuses')->insert([
             ['id'=>1, 'name'=>'activo','created_at'=> Carbon::now()->toDateTimeString(), 'updated_at' =>  Carbon::now()->toDateTimeString()],
             ['id'=>2,'name'=>'desactivado','created_at'=> Carbon::now()->toDateTimeString(), 'updated_at' =>  Carbon::now()->toDateTimeString()],
-            ['id'=>3,'name'=>'no hay existencia','created_at'=> Carbon::now()->toDateTimeString(), 'updated_at' =>  Carbon::now()->toDateTimeString()]
+            ['id'=>3,'name'=>'no hay existencia','created_at'=> Carbon::now()->toDateTimeString(), 'updated_at' =>  Carbon::now()->toDateTimeString()],
+            ['id'=>4,'name'=>'pendiente','created_at'=> Carbon::now()->toDateTimeString(), 'updated_at' =>  Carbon::now()->toDateTimeString()]
         ]);
     
     }

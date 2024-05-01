@@ -15,6 +15,7 @@ class CreateJobsTable extends Migration
     {
         Schema::create('jobs', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('model_id');
             $table->integer('retry');
             $table->unsignedBigInteger('status_id');
             $table->unsignedBigInteger('job_type_id');

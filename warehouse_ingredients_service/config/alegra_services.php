@@ -1,0 +1,5 @@
+<?php
+
+return [
+    'URL_BUY_INGREDIENTS_SERVICE' => env('URL_BUY_INGREDIENTS_SERVICE'),
+];

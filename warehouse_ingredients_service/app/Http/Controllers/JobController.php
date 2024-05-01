@@ -2,84 +2,33 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\InventoryMovement;
 use App\Models\Job;
 use Illuminate\Http\Request;
 
 class JobController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function create($modelId, $jobTypeId)
     {
-        //
-    }
+        $output['status'] = true;
+        $output['msg'] = 'Ya se habia hagendado otra compra para este modelo';
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Job  $job
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Job $job)
-    {
-        //
-    }
+        $jobIsAlreadyScheduled = Job::where('model_id', $modelId)
+            ->where('job_type_id', $jobTypeId)
+            ->where('status_id', 4)
+            ->first();
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Job  $job
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Job $job)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Job  $job
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Job $job)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Job  $job
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Job $job)
-    {
-        //
+        if (!$jobIsAlreadyScheduled) {
+            $output['msg'] = 'Se crea tarea de compra';
+            $job = new Job();
+            $job->modeL_id  = $modelId;
+            $job->retry     = 0;
+            $job->status_id = 4; /* pendiente */
+            $job->job_type_id = $jobTypeId;
+            $job->save();
+        }
+        return $output;
     }
 }
