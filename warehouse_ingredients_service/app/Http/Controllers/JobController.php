@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 class JobController extends Controller
 {
 
-
     public function create($modelId, $jobTypeId)
     {
         $output['status'] = true;
@@ -31,4 +30,6 @@ class JobController extends Controller
         }
         return $output;
     }
+
+
 }

@@ -19,6 +19,7 @@ class CreateHttpLogsTable extends Migration
             $table->json('response')->nullable();
             $table->unsignedBigInteger('type')->nullable(); // 1 => se recive, 2=> se envia
             $table->string('status')->nullable();
+            $table->string('url')->nullable();
             $table->timestamps();
         });
     }
