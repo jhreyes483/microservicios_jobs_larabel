@@ -42,7 +42,10 @@ class IngredientController extends Controller
             }
 
 
-            $movements = $movements->orderBy('id', 'desc')->get()->toArray();
+            $movements = $movements->orderBy('id', 'desc');
+ 
+            $page      = $request->input('page', 1);
+            $movements = $movements->paginate(10, ['*'], 'page', $page);
             $outputs['movements'] = $movements;
             if (!$movements) {
                 $outputs['status'] = true;
