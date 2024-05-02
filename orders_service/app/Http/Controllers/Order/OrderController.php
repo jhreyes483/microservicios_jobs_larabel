@@ -46,20 +46,22 @@ class OrderController extends Controller
     /**
      * @return array
      */
-    public function index(): array
+    public function index(Request $request): array
     {
         $output['status'] =  true;
         $output['msg']    = 'ok';
         $output['code']   = 200;
 
         try {
+            $page = $request->input('page', 1);
+
             $order = Order::with(['Recipe.Ingredients' =>
             function ($query) {
                 $query->withPivot('recipe_quantity');
             }])
                 ->with('Status')
                 ->orderBy('id', 'desc')
-                ->get();
+                ->paginate(9, ['*'], 'page', $page);
             $output['order']   =  $order;
             if (!$order) {
                 $output['status'] =  false;

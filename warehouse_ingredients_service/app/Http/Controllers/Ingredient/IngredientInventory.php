@@ -43,7 +43,7 @@ class IngredientInventory extends Controller
                     $output['status'] = true;
                     $output['msg'] = 'se comproducto y se despacho producto';
                 }else{
-                    $jobResponse =  $this->job->create( $ingredient->id, 1 );
+                    $jobResponse =  $this->job->create( $ingredient->id, 1 , $ingredientIn['quantity'] );
                     $output['msg'] = 'no hay existencia de producto en plaza, se agenda futura compra';
                 }
             } else {
