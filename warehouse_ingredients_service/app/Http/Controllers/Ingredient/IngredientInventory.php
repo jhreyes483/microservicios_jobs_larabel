@@ -28,6 +28,7 @@ class IngredientInventory extends Controller
     }
 
 
+
     public function consumerProdunct($ingredientIn)
     {
         $output['status'] = false;
@@ -35,6 +36,7 @@ class IngredientInventory extends Controller
 
         $ingredient = Ingredient::where('name', $ingredientIn['name'])->first();
         if ($ingredient) {
+            $ingredientIn['quantity'] = $ingredientIn['pivot']['recipe_quantity']; /** se debe descontar lo de la receta no lo que tiene el producto en cocina */
             if ($ingredient->quantity - $ingredientIn['quantity'] <=  0) {
                 $response = $this->buyIngredient($ingredientIn, $ingredient);#
                 if ($response['status']) {
@@ -69,7 +71,7 @@ class IngredientInventory extends Controller
             $login
         );
         $this->saveHttpLog(['ingredient' => $ingredientIn['name']], $resp, 1, $resp['status'] , $this->getBuyUrlService()['buyIngredient']);
-       
+
         if (!$resp['status']) return ['status' => false, 'msg' => 'error en respuesta http'];
         if (!isset($resp['data']['quanitySold'])) return ['status' => false, 'msg' => 'no se retorno quanitySold de market'];
         if($resp['data']['quanitySold'] == 0) return ['status'=>false, 'msg', 'No hay existencias en plaza', 'quanitySold'=> $resp['data']['quanitySold'] ];
