@@ -28,8 +28,7 @@ class IngredientInventory extends Controller
     }
 
 
-
-    public function consumerProdunct($ingredientIn)
+    public function consumerProdunct($ingredientIn): array
     {
         $output['status'] = false;
         $output['msg'] = 'no se modifico inventario, no existe producto';
@@ -58,7 +57,7 @@ class IngredientInventory extends Controller
     }
 
 
-    public function buyIngredient($ingredientIn, $isJob = false)
+    public function buyIngredient($ingredientIn, $isJob = false): array
     {
         $login = $this->toLoginBuyService($isJob);
 
@@ -87,7 +86,8 @@ class IngredientInventory extends Controller
     }
 
 
-    public function buyJobIngredient(){
+    public function buyJobIngredient(): array
+    {
         $output['status'] = true;
         $output['msg'] = 'no hay pendientes';
         $jobsPending = Job::where('job_type_id', 1 )

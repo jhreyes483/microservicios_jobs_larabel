@@ -21,8 +21,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('/login', [AuthController::class, 'login']);
-Route::apiResource('ingredints', IngredientController::class)->middleware('auth:sanctum');
 
-Route::post('/get_ingredients',[IngredientController::class, 'index'] )->middleware('auth:sanctum');
-Route::post('/get_complements',[IngredientController::class, 'getComplements'] )->middleware('auth:sanctum');
-Route::post('/ingredints_mass',[IngredientController::class, 'getIngredientsMass'] )->middleware('auth:sanctum');
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/get_ingredients', [IngredientController::class, 'index'])->middleware('auth:sanctum');
+    Route::post('/get_complements', [IngredientController::class, 'getComplements'])->middleware('auth:sanctum');
+    Route::post('/ingredints_mass', [IngredientController::class, 'getIngredientsMass'])->middleware('auth:sanctum');
+});
