@@ -2,84 +2,50 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Ingredient;
 use App\Models\Recipe;
 use Illuminate\Http\Request;
 
 class RecipeController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return array
      */
-    public function index()
+    public function index(Request $request): array
     {
-        //
+        $output['status'] = true;
+        $output['code'] = 200;
+        $output['msg'] = 'ok';
+
+        try {
+            $output['recipes'] = Recipe::with('Ingredients')
+                ->orderBy('id', 'desc')
+                ->when($request->ingredient_id, function ($query) use ($request) {
+                    $query->whereHas('Ingredients', function ($subQuery) use ($request) {
+                        $subQuery->where('recipe_ingredient.ingredient_id', $request->ingredient_id);
+                    });
+                });
+
+            if (!$output['recipes']->exists()) {
+                $output['msg'] = 'No hay recetas';
+            } else {
+                $output['recipes'] = $output['recipes']->get();
+            }
+        } catch (\Throwable $th) {
+            $output['msg'] = ' error->' . $th->getMessage() . ' line->' . $th->getLine() . ' file->' . $th->getFile();
+            $output['code'] = 500;
+        }
+
+        return $output;
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @return array
      */
-    public function create()
+    public function getComplements(): array
     {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Recipe  $recipe
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Recipe $recipe)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Recipe  $recipe
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Recipe $recipe)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Recipe  $recipe
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Recipe $recipe)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Recipe  $recipe
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Recipe $recipe)
-    {
-        //
+        $ingredient = Ingredient::select('id', 'name')->get();
+        return ['status' => true, 'data' => ['ingredient' => $ingredient], 'code' => 200];
     }
 }

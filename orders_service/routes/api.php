@@ -1,9 +1,10 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\OrderController;
+use App\Http\Controllers\Order\OrderController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use \App\Http\Controllers\RecipeController;
 
 
 /*
@@ -23,4 +24,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('/login', [AuthController::class, 'login']);
 
-Route::apiResource('Orders', OrderController::class);
+Route::apiResource('orders', OrderController::class)->only(['index', 'store', 'show'])->middleware('auth:sanctum');
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/recipe', [RecipeController::class, 'index']);
+    Route::post('/recipe/get_complements', [RecipeController::class, 'getComplements']);
+});

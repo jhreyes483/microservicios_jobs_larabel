@@ -1,0 +1,61 @@
+.avatar_mask{
+    width: 50px;
+    height: 50px;
+    border-radius: 50px;
+    overflow: hidden;
+}
+
+.avatar_mask img{
+    height: 50px;
+}
+
+.slider img{
+    height: 400px;
+}
+
+.body-with-card-item{
+    height: 15em;
+    margin-top: 3px;
+}
+
+.body-with-card{
+    margin-bottom: 1em;
+    height: 95%;
+}
+
+
+.font-1{
+    font-size: 10px;
+}
+
+.font-2{
+    font-size: 15px;
+}
+
+.font-3{
+    color: black;
+    font-size: 18px;
+}
+
+.img-article img{
+    width: 65%;
+    height: 65%;
+    margin-top: 2em;
+    margin-right: 0px;
+    padding-right: 0px;
+    margin-left: 0px;
+    padding-left: 0px;
+    float: right;
+}
+
+.yeargreen{
+    color: rgb(40, 161, 60) !important;
+
+}
+.yearblue{
+    color: blue !important;
+}
+
+.active{
+    color: #078025 !important;
+}

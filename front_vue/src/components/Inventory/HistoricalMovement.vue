@@ -1,0 +1,168 @@
+<template>
+
+    <h1>Historico</h1>
+
+    <div class="container-fluid mt-4 col-md-9">
+        <div>
+            <h4>Tabla de Movimientos</h4>
+
+            <div class="card card-body m-4">
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <label for="movementType">Tipo de Movimiento:</label>
+                        <select v-model="selectedMovementType" id="movementType" class="form-select">
+                            <option v-for="type in movementTypes" :key="type.id" :value="type.id">{{ type.name }}
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <label for="movementReason">Razón de Movimiento:</label>
+                        <select v-model="selectedMovementReason" id="movementReason" class="form-select">
+                            <option v-for="reason in movementReasons" :key="reason.id" :value="reason.id">{{
+                                reason.name }}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="movementIngredient">Ingrediente:</label>
+                        <select v-model="selectedIngredient" id="movementIngredient" class="form-select">
+                            <option v-for="ingredient in movementIngredients" :key="ingredient.id"
+                                :value="ingredient.id">{{
+                                    ingredient.name }}
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-3 mb-3 mt-4">
+                        <label></label>
+                        <button class="btn btn-primary" @click="getMovements">Buscar</button>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div v-if="isLoading" class="mt-5 spinner-border text-dark mt-4" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+
+
+            <div v-else class="table-responsive">
+                <table class="table table-striped">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Cantidad</th>
+                            <th>Ingrediente ID</th>
+                            <th>Ingrediente</th>
+                            <th>Motivo de Movimiento</th>
+                            <th>Tipo de Movimiento</th>
+                            <th>Usuario ID</th>
+                            <th>Fecha de Creación</th>
+                            <th>Fecha de Actualización</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="item in movements" :key="item.id">
+                            <td>{{ item.id }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>{{ item.ingredient_id }}</td>
+                            <td>{{ item.ingredient.name }}</td>
+                            <td>{{ item.reazon.name }}</td>
+                            <td>{{ item.type.name }}</td>
+                            <td>{{ item.user_id }}</td>
+                            <td>{{ formatDateTime(item.created_at) }}</td>
+                            <td>{{ formatDateTime(item.updated_at) }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+import Swal from 'sweetalert2';
+import updateServiceConfig from '../../../config/services';
+export default {
+    name: "HistoricalMovements",
+    data() {
+        return {
+            movements: {},
+            isLoading: false,
+            movementTypes: [],
+            movementReasons: [],
+            movementIngredients: [],
+            selectedMovementType: null,
+            selectedMovementReason: null,
+            selectedIngredient: null,
+
+        };
+    },
+    methods: {
+        getMovements() {
+            this.isLoading = true;
+            console.log('getOrders')
+            updateServiceConfig(1, this.axios);
+
+            let postData = {
+                movement_type_id: this.selectedMovementType,
+                movement_reason_id: this.selectedMovementReason,
+                movement_ingredient_id: this.selectedIngredient
+            };
+
+            this.axios.post('api/get_ingredients/', postData).then(res => {
+                if (res.data.status) {
+                    this.isLoading = false;
+                    this.movements = res.data.movements;
+                }
+            }).catch(err => {
+                this.isLoading = false;
+                Swal.fire({
+                    icon: 'error',
+                    text: 'Error al registrar.',
+                });
+                console.error(err);
+            });
+        },
+
+        getComplements() {
+            updateServiceConfig(1, this.axios);
+            this.axios.post('api/get_complements/', {}).then(res => {
+                if (res.data.status) {
+                    console.log(res.data.data.ingredient)
+                    this.movementTypes = res.data.data.types;
+                    this.movementReasons = res.data.data.reasons;
+                    this.movementIngredients = res.data.data.ingredient;
+                }
+            }).catch(err => {
+                this.isLoading = false;
+                Swal.fire({
+                    icon: 'error',
+                    text: 'Error al registrar.',
+                });
+                console.error(err);
+            });
+
+        },
+        formatDateTime(dateTimeString) {
+            const options = {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+                hour: "numeric",
+                minute: "numeric",
+                second: "numeric",
+                timeZoneName: "short"
+            };
+            const dateTime = new Date(dateTimeString);
+            return dateTime.toLocaleString("es-ES", options);
+        },
+    },
+    mounted() {
+        this.getComplements();
+        this.getMovements();
+    }
+
+}
+</script>
