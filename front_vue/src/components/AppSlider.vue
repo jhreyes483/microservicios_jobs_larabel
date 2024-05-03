@@ -1,5 +1,7 @@
 <template>
+ 
     <div id="carouselExampleIndicators" class="carousel slide container mt-4 slider" data-bs-ride="carousel">
+        <br>
        <h1> {{ texto }}</h1>
         <div class="carousel-indicators">
             <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"

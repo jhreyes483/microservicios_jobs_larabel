@@ -1,14 +1,15 @@
 <template>
-  <AppHeader></AppHeader>
+
 
   <div class="content">
-
+    <AppHeader></AppHeader>
     <router-view></router-view>
+    <AppFooter></AppFooter>
   </div>
 
 
 
-  <AppFooter></AppFooter>
+
 
 
 </template>
@@ -18,18 +19,13 @@
 import AppHeader from './components/AppHeader.vue';
 import AppFooter from './components/AppFooter.vue';
 
-//import AppSlider from './components/AppSlider.vue';
-
-
 export default {
   name: 'App',
   components: {
     AppHeader,
-    AppFooter,
-  //  AppSlider,
+    AppFooter
    
 }
-
 }
 
 </script>
@@ -65,6 +61,10 @@ body {
 .footer {
   flex-shrink: 0;
   margin-top: auto; 
+}
+
+.btm-primary{
+    background-color: #30aba9 !important;
 }
 
 @import '../public/css/bootstrap.min.css';

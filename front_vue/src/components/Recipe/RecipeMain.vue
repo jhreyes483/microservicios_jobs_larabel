@@ -8,7 +8,7 @@
             <div class="row">
                 <div class="col-md-3 mb-3">
                     <label for="movementIngredient">Ingrediente:</label>
-                    <select v-model="selectedIngredient" id="movementIngredient" class="form-select">
+                    <select class="form-select" v-model="selectedIngredient" aria-label="Default select example">
                         <option v-for="ingredient in movementIngredients" :key="ingredient.id" :value="ingredient.id">{{
                             ingredient.name }}
                         </option>
@@ -17,7 +17,7 @@
 
                 <div class="col-md-3 mb-3 mt-4">
                     <label></label>
-                    <button class="btn btn-primary" @click="getRecipes">Buscar</button>
+                    <button class="btn btn-alegra" style="background-color: #30aba9;   color: #ffff;" @click="getRecipes">Buscar</button>
                 </div>
 
             </div>
@@ -120,3 +120,17 @@ export default {
 }
 
 </script>
+
+<style>
+.btm-alegra{
+    background-color: #30aba9 !important;
+    color: #ffff;
+}
+
+
+.btm-alegra:hover{
+    background-color: #248886 !important;
+    color: #ffff;
+}
+
+</style>

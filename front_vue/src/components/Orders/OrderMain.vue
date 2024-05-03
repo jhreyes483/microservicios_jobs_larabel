@@ -39,16 +39,20 @@
                                 </ul>
                             </td>
                             <td>
-                                <button @click="redirectToOrder(order.id)" class="btn btn-primary">Ver Detalles</button>
+                                <button @click="redirectToOrder(order.id)" class="btn btn-success">Ver Detalles</button>
                             </td>
                         </tr>
                     </tbody>
                 </table>
+
+                <div>
+                    <button class ="btn btn-sm btn-light" @click="changePage(currentPage - 1)" :disabled="currentPage === 1">Anterior</button>
+                    {{ currentPage }}
+                    <button class ="btn btn-sm btn-light"  @click="changePage(currentPage + 1)" :disabled="currentPage === lastPage">Siguiente</button>
+                </div>
             </div>
         </div>
     </div>
-
-
 </template>
 
 <script>
@@ -60,47 +64,40 @@ export default {
     data() {
         return {
             orders: {},
-            isLoading: false
+            isLoading: false,
+            currentPage: 1
         }
     },
     methods: {
         getOrder() {
-            this.isLoading= true;
+            this.isLoading = true;
             console.log('getOrders')
             updateServiceConfig(0, this.axios);
 
-            this.axios.get('api/orders/', {}).then(res => {
+            let data = {
+                page: this.currentPage
+            }
+
+            this.axios.post('api/get_orders/', { data }).then(res => {
                 if (res.data.status) {
                     this.isLoading = false;
-                    this.orders = res.data.order;
+                    this.orders = res.data.order.data;
                     console.log(this.orders)
                     this.isLoading = false;
-                    /*
-                    this.order = res.data.order;
-                    this.recipe = res.data.order.recipe;
-                    this.ingredients = res.data.order.recipe.ingredients;
-                    this.status = res.data.order.status;
-                    console.log("   this.order ", this.order)
-                    console.log("   this.recipe ", this.recipe)
-                    console.log("   status ", this.status)
-                    */
-                    /*
-                  const url = `/order?id=${res.data.order_id}`;
-                  Swal.fire({
-                    icon: 'success',
-                    text: res.data.msg,
-                    footer: `<a href="${url}">Ver orden</a>`
-                  });
-                  */
                 }
             }).catch(err => {
-                this.isLoading= false;
+                this.isLoading = false;
                 Swal.fire({
                     icon: 'error',
                     text: 'Error al registrar.',
                 });
                 console.error(err);
             });
+        },
+        changePage(page) {
+            console.log("page", page);
+            this.currentPage = page;
+            this.getOrder()
         },
         formatDateTime(dateTimeString) {
             const options = {

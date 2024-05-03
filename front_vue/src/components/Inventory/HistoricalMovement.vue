@@ -1,6 +1,6 @@
 <template>
 
-    <h1>Historico</h1>
+    <h1 class="mt-4">Historico</h1>
 
     <div class="container-fluid mt-4 col-md-9">
         <div>
@@ -9,8 +9,9 @@
             <div class="card card-body m-4">
                 <div class="row">
                     <div class="col-md-3 mb-3">
-                        <label for="movementType">Tipo de Movimiento:</label>
-                        <select v-model="selectedMovementType" id="movementType" class="form-select">
+                        <label for="movementType">Tipo de Movimiento</label>
+                        <select v-model="selectedMovementType" id="movementType" class="form-select"
+                            placeholder="seleccione tipo">
                             <option v-for="type in movementTypes" :key="type.id" :value="type.id">{{ type.name }}
                             </option>
                         </select>
@@ -18,13 +19,14 @@
 
                     <div class="col-md-3 mb-3">
                         <label for="movementReason">Razón de Movimiento:</label>
-                        <select v-model="selectedMovementReason" id="movementReason" class="form-select">
+                        <select v-model="selectedMovementReason" id="movementReason" class="form-select"
+                            placeholder="seleccione tipo">
                             <option v-for="reason in movementReasons" :key="reason.id" :value="reason.id">{{
                                 reason.name }}</option>
                         </select>
                     </div>
                     <div class="col-md-3 mb-3">
-                        <label for="movementIngredient">Ingrediente:</label>
+                        <label for="movementIngredient">Ingredientess:</label>
                         <select v-model="selectedIngredient" id="movementIngredient" class="form-select">
                             <option v-for="ingredient in movementIngredients" :key="ingredient.id"
                                 :value="ingredient.id">{{
@@ -35,7 +37,7 @@
 
                     <div class="col-md-3 mb-3 mt-4">
                         <label></label>
-                        <button class="btn btn-primary" @click="getMovements">Buscar</button>
+                        <button class="btn btm-alegra" @click="getMovements">Buscar</button>
                     </div>
 
                 </div>
@@ -76,10 +78,23 @@
                         </tr>
                     </tbody>
                 </table>
+                <div>
+                    <button class="btn btn-sm btn-light" @click="changePage(currentPage - 1)"
+                        :disabled="currentPage === 1">Anterior</button>
+                    {{ currentPage }}
+                    <button class="btn btn-sm btn-light" @click="changePage(currentPage + 1)"
+                        :disabled="currentPage === lastPage">Siguiente</button>
+                </div>
             </div>
         </div>
     </div>
 </template>
+
+<style>
+
+
+
+</style>
 
 <script>
 import Swal from 'sweetalert2';
@@ -96,9 +111,11 @@ export default {
             selectedMovementType: null,
             selectedMovementReason: null,
             selectedIngredient: null,
+            currentPage: 1
 
         };
     },
+
     methods: {
         getMovements() {
             this.isLoading = true;
@@ -108,13 +125,14 @@ export default {
             let postData = {
                 movement_type_id: this.selectedMovementType,
                 movement_reason_id: this.selectedMovementReason,
-                movement_ingredient_id: this.selectedIngredient
+                movement_ingredient_id: this.selectedIngredient,
+                page: this.currentPage
             };
 
             this.axios.post('api/get_ingredients/', postData).then(res => {
                 if (res.data.status) {
                     this.isLoading = false;
-                    this.movements = res.data.movements;
+                    this.movements = res.data.movements.data;
                 }
             }).catch(err => {
                 this.isLoading = false;
@@ -144,6 +162,11 @@ export default {
                 console.error(err);
             });
 
+        },
+        changePage(page) {
+            console.log("page", page);
+            this.currentPage = page;
+            this.getMovements()
         },
         formatDateTime(dateTimeString) {
             const options = {

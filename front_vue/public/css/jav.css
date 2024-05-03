@@ -48,6 +48,9 @@
     float: right;
 }
 
+
+
+
 .yeargreen{
     color: rgb(40, 161, 60) !important;
 
@@ -59,3 +62,23 @@
 .active{
     color: #078025 !important;
 }
+
+
+.btm-alegra{
+    background-color: #30aba9 !important;
+    color: #ffff;
+}
+
+
+.btm-alegra:hover{
+    background-color: #248886 !important;
+    color: #ffff;
+}
+
+.card{
+    border-radius: 0.5em;
+    background-color: #f4ffff;
+}
+
+
+

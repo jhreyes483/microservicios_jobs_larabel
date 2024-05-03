@@ -15,6 +15,7 @@ import OrderDetail from './components/Orders/OrderDetail.vue';
 import OrderMain from './components/Orders/OrderMain';
 import HistoricalMovement from './components/Inventory/HistoricalMovement';
 import RecipeMain from './components/Recipe/RecipeMain.vue';
+import HistoricalPurchase from './components/Inventory/HistoricalPurchase';
 
 const routes = [
 
@@ -51,6 +52,11 @@ const routes = [
         path: '/history_movoments',
         name: 'HistoricalMovement',
         component: HistoricalMovement
+    },
+    {
+        path: '/purchase',
+        name: 'HistoricalPurchase',
+        component: HistoricalPurchase 
     },
  
 

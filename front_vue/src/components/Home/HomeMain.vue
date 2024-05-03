@@ -1,8 +1,11 @@
 <template>
-  <AppSlider :showBtn="true" texto="Inicio"></AppSlider>
-  <div class="col-md-8 mx-auto">
 
-    <div class="btn btn-primary my-1" @click="askForOrder"> Ordenar un plato </div>
+  <br>
+  <AppSlider  :showBtn="true" texto="Inicio"></AppSlider>
+
+  <div class="col-md-8 mx-auto ">
+    <br>
+    <div class="btn btm-alegra my-1" @click="askForOrder"> Ordenar un plato </div>
     <br>
 
   </div>
@@ -44,7 +47,7 @@ export default {
           icon: 'error',
           text: 'Error al registrar.',
         });
-        console.error(err); 
+        console.error(err);
       });
     }
 
