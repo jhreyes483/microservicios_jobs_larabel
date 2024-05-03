@@ -12,6 +12,7 @@ use App\Models\TypeOfMovement;
 use Illuminate\Support\Facades\DB;
 
 use App\Models\ReasonOfMovement;
+use App\Models\Job;
 
 class IngredientController extends Controller
 {
@@ -23,11 +24,32 @@ class IngredientController extends Controller
         $this->inventory = $inventory;
     }
 
+
+    public function purchaseIndex(Request $request)
+    {
+        $output['status'] = true;
+        $output['code'] = 200;
+        $output['msg'] = 'ok';
+
+        try {
+            $purchases =  Job::with('Type')->with('Status')->where('job_type_id', $this->typeJobPurchase);
+            $page      = $request->input('page', 1);
+            $purchases = $purchases->orderBy('id', 'desc');
+            $purchases = $purchases->paginate(10, ['*'], 'page', $page);
+            $output['purchases'] = $purchases;
+
+        } catch (\Throwable $th) {
+            $output['msg'] = ' error->' . $th->getMessage() . ' line->' . $th->getLine() . ' file->' . $th->getFile();
+            $output['code'] = 500;
+        }
+        return $output;
+    }
+
     public function index(Request $request): array
     {
-        $outputs['status'] = true;
+        $output['status'] = true;
         $output['code'] = 200;
-        $outputs['msg'] = 'ok';
+        $output['msg'] = 'ok';
 
         try {
             $movements = InventoryMovement::with('Type')->with('Reazon')->with('Ingredient');
@@ -43,34 +65,34 @@ class IngredientController extends Controller
 
 
             $movements = $movements->orderBy('id', 'desc');
- 
+
             $page      = $request->input('page', 1);
             $movements = $movements->paginate(10, ['*'], 'page', $page);
-            $outputs['movements'] = $movements;
+            $output['movements'] = $movements;
             if (!$movements) {
-                $outputs['status'] = true;
-                $outputs['msg'] = 'No hay movimientos';
-                $outputs['movements'] = [];
+                $output['status'] = true;
+                $output['msg'] = 'No hay movimientos';
+                $output['movements'] = [];
             }
         } catch (\Throwable $th) {
             $output['msg'] = ' error->' . $th->getMessage() . ' line->' . $th->getLine() . ' file->' . $th->getFile();
             $output['code'] = 500;
         }
-        return $outputs;
+        return $output;
     }
 
     public function getIngredientsMass(Request $request): array
     {
-        $outputs['status'] = false;
-        $outputs['msg'] = 'error';
-        $outputs['code'] = 400;
+        $output['status'] = false;
+        $output['msg'] = 'error';
+        $output['code'] = 400;
         try {
             DB::beginTransaction();
             if (isset($request['ingredients']) && count($request['ingredients'])) {
-                $outputs['status'] = true;
-                $outputs['code'] = 200;
-                $outputs['msg'] = 'peticion okddda';
-                $outputs['process'] = [];
+                $output['status'] = true;
+                $output['code'] = 200;
+                $output['msg'] = 'peticion okddda';
+                $output['process'] = [];
 
                 $allIngredintFull = true;
 
@@ -78,15 +100,15 @@ class IngredientController extends Controller
                     $resp = $this->inventory->consumerProdunct($ingredient);
                     if (!$resp['status']) {
                         $allIngredintFull = false;
-                        $outputs['msg']  = $resp['msg'] . ' ' . $ingredient['name'] ?? 'no identificado';
+                        $output['msg']  = $resp['msg'] . ' ' . $ingredient['name'] ?? 'no identificado';
                     } else {
                         $resp['ingredient'] = $ingredient;
-                        $outputs['process'][] = $resp;
+                        $output['process'][] = $resp;
                     }
                 }
 
                 if (!$allIngredintFull) {
-                    $outputs['status'] = false;
+                    $output['status'] = false;
                 }
             }
             DB::commit();
@@ -95,7 +117,7 @@ class IngredientController extends Controller
             $output['msg'] = ' error->' . $th->getMessage() . ' line->' . $th->getLine() . ' file->' . $th->getFile();
             $output['code'] = 500;
         }
-        return $outputs;
+        return $output;
     }
 
     public function getComplements(): array

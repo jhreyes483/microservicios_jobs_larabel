@@ -13,5 +13,7 @@ class Controller extends BaseController
     public $statusInAction = 5;
     public $statusEnd = 7;
 
+    public $typeJobPurchase = 1;
+
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 }
