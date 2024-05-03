@@ -13,10 +13,18 @@ trait ClientHttp
 
         return [
             'buyLogin'                    =>  $urlWarehouseService . 'api/login/',
-            'buyIngredient'               =>  $urlWarehouseService . 'marker/',
-            'warehouseIngredient'         =>  $urlWarehouseService . 'api/ingredints_mass'
+            'buyIngredient'               =>  $urlWarehouseService . 'marker/'
         ];
     }
+
+    public function getUrlOrderService(): array
+    {
+        $urlOrderService =  config('alegra_services.URL_ORDER_INGREDIENTS_SERVICE');
+        return [
+            'orderLogin'                    =>  $urlOrderService  . 'api/login/',
+            'receiveIngredient'           =>  $urlOrderService . 'api/job/receive_ingredient'
+        ];
+     }
 
     public function sendHttp(string $url, array $params = [], string $method = 'POST', $authorization = []): array
     {
@@ -65,6 +73,31 @@ trait ClientHttp
         $autUser = ['email' =>$email, 'password' => 'test'];
         $login   = $this->sendHttp(
             $this->getBuyUrlService()['buyLogin'],
+            $autUser,
+            'POST',
+            []
+        );
+        $this->saveHttpLog( $autUser , $login, 1, $login['status']??false , $this->getBuyUrlService()['buyLogin']);
+
+        if ($login && isset($login['data']['status']) && $login['data']['status']) {
+            $output['status'] = true;
+            $output['token'] =  $login['data']['authorisation']['token'];
+            $output['msg']   = 'login ok';
+            return $output;
+        }
+    }
+
+
+    public function toLoginOrderService($isSistem = false)
+    {
+        $output['status'] = false;
+        $output['msg']    = 'Usuario no logeado';
+
+        $password = !$isSistem ? Auth::user()->password : config('alegra_services.PASSWORD_SYSTEM');
+        $email    = !$isSistem ? Auth::user()->email : config('alegra_services.EMAIL_SYSTEM');
+        $autUser  = ['email' =>$email, 'password' => $password];
+        $login    = $this->sendHttp(
+            $this->getUrlOrderService()['orderLogin'],
             $autUser,
             'POST',
             []

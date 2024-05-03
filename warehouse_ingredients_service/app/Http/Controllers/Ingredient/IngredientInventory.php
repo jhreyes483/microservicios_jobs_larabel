@@ -28,7 +28,7 @@ class IngredientInventory extends Controller
     }
 
 
-    public function consumerProdunct($ingredientIn): array
+    public function consumerProdunct($ingredientIn, $externalOrderId = null): array
     {
         $output['status'] = false;
         $output['msg'] = 'no se modifico inventario, no existe producto';
@@ -37,13 +37,14 @@ class IngredientInventory extends Controller
         if ($ingredient) {
             $ingredientIn['quantity'] = $ingredientIn['pivot']['recipe_quantity']; /** se debe descontar lo de la receta no lo que tiene el producto en cocina */
             if ($ingredient->quantity - $ingredientIn['quantity'] <=  0) {
+
                 $response = $this->buyIngredient($ingredientIn, $ingredient);#
                 if ($response['status']) {
                     $this->movementInvetory($ingredient->id, $ingredientIn['quantity'], 2 /* resta */, 3 /* entra de producto */);
                     $output['status'] = true;
                     $output['msg'] = 'se comproducto y se despacho producto';
                 }else{
-                    $jobResponse =  $this->job->create( $ingredient->id, 1 , $ingredientIn['quantity'] );
+                    $jobResponse =  $this->job->create( $ingredient->id, 1 , $ingredientIn['quantity'], $externalOrderId );
                     $output['msg'] = 'no hay existencia de producto en plaza, se agenda futura compra';
                 }
             } else {
@@ -104,6 +105,18 @@ class IngredientInventory extends Controller
 
                 if($resp['status']){
                     $job->status_id = $this->statusEnd;
+
+                    $login = $this->toLoginOrderService(true);
+                    $body  = ['ingredient_id'=>$job->model_id,'external_order_id'=>$job->external_order_id ];
+
+                    $resp = $this->sendHttp(
+                        $this->getUrlOrderService()['receiveIngredient'],
+                        $body,
+                        'POST',
+                        $login
+                    );
+                    $this->saveHttpLog($body, $resp, 1, $resp['status'] , $this->getBuyUrlService()['buyIngredient']);
+
 
                 }else{
                     $job->status_id = $this->statusRending;

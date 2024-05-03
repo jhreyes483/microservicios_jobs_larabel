@@ -98,10 +98,11 @@ class IngredientController extends Controller
                 $allIngredintFull = true;
 
                 foreach ($request['ingredients'] as $ingredient) {
-                    $resp = $this->inventory->consumerProdunct($ingredient);
+                    $resp = $this->inventory->consumerProdunct($ingredient, $request['external_order_id']??null );
                     if (!$resp['status']) {
                         $allIngredintFull = false;
                         $output['msg']  = $resp['msg'] . ' ' . $ingredient['name'] ?? 'no identificado';
+                        $output['pendings'][] = $ingredient;
                     } else {
                         $resp['ingredient'] = $ingredient;
                         $output['process'][] = $resp;

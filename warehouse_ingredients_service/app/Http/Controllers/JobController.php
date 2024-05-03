@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class JobController extends Controller
 {
 
-    public function create($modelId, $jobTypeId, $quantity)
+    public function create($modelId, $jobTypeId, $quantity,$externalOderId )
     {
         $output['status'] = true;
         $output['msg'] = 'Ya se habia hagendado otra compra para este modelo';
@@ -27,6 +27,7 @@ class JobController extends Controller
             $job->status_id = 4; /* pendiente */
             $job->job_type_id = $jobTypeId;
             $job->model_quantity = $quantity;
+            $job->external_order_id = $externalOderId;
             $job->save();
         }
         return $output;

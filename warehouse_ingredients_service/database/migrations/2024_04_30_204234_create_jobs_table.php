@@ -20,6 +20,7 @@ class CreateJobsTable extends Migration
             $table->unsignedBigInteger('model_quantity');
             $table->unsignedBigInteger('status_id');
             $table->unsignedBigInteger('job_type_id');
+            $table->unsignedBigInteger('external_order_id')->nullable();
             $table->foreign('job_type_id')->references('id')->on('job_types');
             $table->foreign('status_id')->references('id')->on('statuses');
             $table->timestamps();
