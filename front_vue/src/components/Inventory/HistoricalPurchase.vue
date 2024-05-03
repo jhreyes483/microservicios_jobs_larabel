@@ -1,43 +1,50 @@
 <template>
 
-  <div class="mt-4">
-    <h4>Estado de compras en espera</h4>
-  </div>
+    <div class="container-fluid mt-4">
+        <h2>Cola de compras en espera</h2>
+    </div>
 
-    <div class="container-fluid mt-4 col-md-9">
+    <div v-if="isLoading" class="mt-5 spinner-border text-dark mt-4" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+
+    <div v-else class="col-md-9 mx-auto">
         <div>
-
-
-      
-
             <div>
-                <div>
-                    <table class="table">
+                <div class ="table-responsive mt-5">
+                    <table class="table table-striped table-hover">
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Model ID</th>
-                                <th>Retry</th>
-                                <th>Status</th>
-                                <th>Type</th>
-                                <th>Created At</th>
+                                <th>Ingrediente</th>
+                                <th>Reintetos</th>
+                                <th>Estado</th>
+                                <th>Tipo</th>
+                                <th>Creacion</th>
+                                <th>Actualización</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="purchase in purchases" :key="purchase.id">
-                                <td>{{ purchase.id }}</td>
                                 <td>{{ purchase.model_id }}</td>
+                                <td>{{ purchase.model.name }}</td>
                                 <td>{{ purchase.retry }}</td>
                                 <td :style="{ background: purchase.status.color }">{{ purchase.status.name }}</td>
                                 <td>{{ purchase.type.name }}</td>
-                                <td>{{ new Date(purchase.created_at).toLocaleDateString() }}</td>
+                                <td>{{ new Date(purchase.created_at).toLocaleString() }}</td>
+                                <td>{{ new Date(purchase.updated_at).toLocaleString() }}</td>
                             </tr>
                         </tbody>
                     </table>
+                    <div>
+                        <button class="btn btn-sm btn-light" @click="changePage(currentPage - 1)"
+                            :disabled="currentPage === 1">Anterior</button>
+                        {{ currentPage }}
+                        <button class="btn btn-sm btn-light" @click="changePage(currentPage + 1)"
+                            :disabled="currentPage === lastPage">Siguiente</button>
+                    </div>
                 </div>
             </div>
-
-
         </div>
     </div>
 
@@ -50,8 +57,10 @@ export default {
     name: "HistoricalPurchase",
     data() {
         return {
-            purchases: {}
-
+            purchases: {},
+            isLoading: false,
+            currentPage: 1,
+            lastPage: 1
         };
     },
     mounted() {
@@ -60,14 +69,18 @@ export default {
     methods: {
 
         getPurchases() {
+            this.isLoading = true;
             updateServiceConfig(1, this.axios);
-            this.axios.post('api/get_purchase/', {}).then(res => {
+            let data = {
+                page: this.currentPage
+            }
+
+            this.axios.post('api/get_purchase/', data).then(res => {
                 if (res.data.status) {
+                    this.isLoading = false;
                     console.log(res.data.purchases.data)
                     this.purchases = res.data.purchases.data;
-                    //this.movementTypes = res.data.data.types;
-                    //this.movementReasons = res.data.data.reasons;
-                    //this.movementIngredients = res.data.data.ingredient;
+                    this.lastPage =  res.data.purchases.last_page;
                 }
             }).catch(err => {
                 this.isLoading = false;
@@ -77,7 +90,12 @@ export default {
                 });
                 console.error(err);
             });
-        }
+        },
+        changePage(page) {
+            console.log("page", page);
+            this.currentPage = page;
+            this.getPurchases()
+        },
     }
 
 }

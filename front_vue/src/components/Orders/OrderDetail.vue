@@ -10,9 +10,13 @@
                 <div class="col-md-4">
                     <div class="card">
                         <div class="card-body">
-                            <h2>Id de orden: {{ order.id }} </h2>
+                            <h2 >Id de orden: {{ order.id }} </h2>
                             <div class="card">
-                                <h3>Estado: {{ status.name }} </h3>
+
+                                <div class="card mb-1 " :style="{ background: status.color }">
+                                    <h3>Estado: {{ status.name }} </h3>
+                                </div>
+                               
                                 <p> Creación: {{ formatDateTime(order.created_at) }} </p>
                                 <p> Acutalización: {{ formatDateTime(order.created_at) }} </p>
 
@@ -25,12 +29,12 @@
                         <div class="card-body">
                             <h2>{{ recipe.name }}</h2>
                             <div class="table-responsive">
-                                <table class="table table-striped">
+                                <table class="table table-striped table-hover">
                                     <thead>
                                         <tr>
                                             <th>ID</th>
-                                            <th>Ingredient Name</th>
-                                            <th>Quantity</th>
+                                            <th>Ingrediente</th>
+                                            <th>Cantidad</th>
                                         </tr>
                                     </thead>
                                     <tbody>

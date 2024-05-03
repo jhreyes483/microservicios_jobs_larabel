@@ -1,11 +1,10 @@
 <template>
 
-    <h1 class="mt-4">Historico</h1>
+   
 
     <div class="container-fluid mt-4 col-md-9">
+        <h2 >Historico movimientos warehouse</h2>
         <div>
-            <h4>Tabla de Movimientos</h4>
-
             <div class="card card-body m-4">
                 <div class="row">
                     <div class="col-md-3 mb-3">
@@ -49,8 +48,8 @@
             </div>
 
 
-            <div v-else class="table-responsive">
-                <table class="table table-striped">
+            <div v-else class="table-responsive mt-2">
+                <table class="table table-striped table-hover">
                     <thead class="thead-dark">
                         <tr>
                             <th>ID</th>
@@ -111,7 +110,8 @@ export default {
             selectedMovementType: null,
             selectedMovementReason: null,
             selectedIngredient: null,
-            currentPage: 1
+            currentPage: 1,
+            lastPage: 1
 
         };
     },
@@ -133,6 +133,7 @@ export default {
                 if (res.data.status) {
                     this.isLoading = false;
                     this.movements = res.data.movements.data;
+                    this.lastPage  = res.data.movements.last_page 
                 }
             }).catch(err => {
                 this.isLoading = false;

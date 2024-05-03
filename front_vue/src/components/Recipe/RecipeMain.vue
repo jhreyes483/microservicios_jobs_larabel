@@ -1,8 +1,8 @@
 <template>
 
 
-    <div class="container mt-5">
-        <h2 class="mb-4">Recetas</h2>
+    <div class="container ">
+        <h2 class="mb-4 mt-4">Recetas</h2>
 
         <div class="card card-body m-4">
             <div class="row">
@@ -17,40 +17,40 @@
 
                 <div class="col-md-3 mb-3 mt-4">
                     <label></label>
-                    <button class="btn btn-alegra" style="background-color: #30aba9;   color: #ffff;" @click="getRecipes">Buscar</button>
+                    <button class="btn btn-alegra" style="background-color: #30aba9;   color: #ffff;"
+                        @click="getRecipes">Buscar</button>
                 </div>
-
             </div>
-
         </div>
 
-        <div v-if="isLoading" class="mt-5 spinner-border text-dark mt-4" role="status">
+        <div v-if="isLoading" class="mt-5 spinner-border text-dark" role="status">
             <span class="visually-hidden">Loading...</span>
         </div>
 
-
-        <table v-else class="table table-striped table-bordered">
-            <thead class="thead-dark">
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Ingredients</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="recipe in recipes" :key="recipe.id">
-                    <td>{{ recipe.id }}</td>
-                    <td>{{ recipe.name }}</td>
-                    <td>
-                        <ul class="list-unstyled">
-                            <li v-for="ingredient in recipe.ingredients" :key="ingredient.id">
-                                {{ ingredient.name }} ({{ ingredient.pivot.recipe_quantity }})
-                            </li>
-                        </ul>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <div v-else class="table-responsive ">
+            <table class="table table-striped table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Ingredients</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="recipe in recipes" :key="recipe.id">
+                        <td>{{ recipe.id }}</td>
+                        <td>{{ recipe.name }}</td>
+                        <td>
+                            <ul class="list-unstyled">
+                                <li v-for="ingredient in recipe.ingredients" :key="ingredient.id">
+                                    {{ ingredient.name }} ({{ ingredient.pivot.recipe_quantity }})
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </template>
 
@@ -122,15 +122,14 @@ export default {
 </script>
 
 <style>
-.btm-alegra{
+.btm-alegra {
     background-color: #30aba9 !important;
     color: #ffff;
 }
 
 
-.btm-alegra:hover{
+.btm-alegra:hover {
     background-color: #248886 !important;
     color: #ffff;
 }
-
 </style>

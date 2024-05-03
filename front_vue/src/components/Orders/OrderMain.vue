@@ -1,15 +1,16 @@
 <template>
 
     <div class="container-fluid mt-4">
+        <h2>Ordenes</h2>
         <div>
-            <h1>Ordenes</h1>
+          
 
             <div v-if="isLoading" class="mt-5 spinner-border text-dark mt-4" role="status">
                 <span class="visually-hidden">Loading...</span>
             </div>
 
 
-            <div v-else class="table-responsive col-md-8 mx-auto mt-4">
+            <div v-else class="table-responsive col-md-8 mx-auto mt-5">
                 <table class="table table-striped table-hover">
                     <thead class="thead-dark">
                         <tr>
@@ -25,8 +26,8 @@
                         <tr v-for="order in orders" :key="order.id">
                             <td>{{ order.id }}</td>
                             <td>{{ formatDateTime(order.created_at) }}</td>
-                            <td>
-                                <span class="'badge badge-pill">
+                              <td :style="{ background: order.status.color }">
+                                <span >
                                     {{ order.status.name }}
                                 </span>
                             </td>
@@ -65,7 +66,8 @@ export default {
         return {
             orders: {},
             isLoading: false,
-            currentPage: 1
+            currentPage: 1,
+            lastPage: 1
         }
     },
     methods: {
@@ -82,8 +84,8 @@ export default {
                 if (res.data.status) {
                     this.isLoading = false;
                     this.orders = res.data.order.data;
+                    this.lastPage = res.data.order.last_page;
                     console.log(this.orders)
-                    this.isLoading = false;
                 }
             }).catch(err => {
                 this.isLoading = false;
