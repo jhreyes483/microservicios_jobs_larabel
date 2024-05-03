@@ -93,6 +93,7 @@ class IngredientInventory extends Controller
         $jobsPending = Job::where('job_type_id', 1 )
         ->where('status_id', $this->statusRending )
         ->limit(10)
+        ->orderBy('retry','asc')
         ->get();
 
         if (count($jobsPending)){
@@ -106,6 +107,7 @@ class IngredientInventory extends Controller
 
                 }else{
                     $job->status_id = $this->statusRending;
+                    $job->retry ++;
                 }
                 $job->save();
           

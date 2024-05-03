@@ -112,7 +112,7 @@ class OrderController extends Controller
 
                         if ($resp['status']) {
                             $order = new Order();
-                            $order->status_id = 1;
+                            $order->status_id = $this->statusEnd;
                             $order->user_id  = Auth::id();
                             $order->recipe_id = $recipe[0]['id'];
                             $order->save();

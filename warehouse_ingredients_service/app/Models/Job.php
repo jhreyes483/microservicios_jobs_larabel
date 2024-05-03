@@ -17,4 +17,8 @@ class Job extends Model
         return $this->belongsTo(Status::class, 'status_id');
     }
 
+    public function Model(){
+        return $this->belongsTo(Ingredient::class, 'model_id');
+    }
+
 }
