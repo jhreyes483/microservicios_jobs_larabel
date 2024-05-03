@@ -15,4 +15,7 @@ Consume los dos microservicios, para la gestión de ordenes e informes de los mo
 Correo: jav-rn@hotmail.com 
 Password: password
 
+### Hoja de vida 
+https://jhreyes483.github.io/Hoja_V/
+
 Gracias
