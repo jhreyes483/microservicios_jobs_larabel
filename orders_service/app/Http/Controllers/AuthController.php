@@ -48,7 +48,7 @@ class AuthController extends Controller
     public function toLoginWarehouseService()
     {
 
-        $this->urlWarehouseService  = config('alegra_services.URL_WAREHOUSE_INGREDIENTS_SERVICE');
+       // $this->urlWarehouseService  = config('alegra_services.URL_WAREHOUSE_INGREDIENTS_SERVICE');
         $output['status']           = false;
         $output['msg']              = 'error';
         $params['email']            = Auth::user()->email;

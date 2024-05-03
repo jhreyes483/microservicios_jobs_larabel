@@ -18,6 +18,7 @@ class CreateOrdersTable extends Migration
             $table->unsignedBigInteger("status_id");
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('recipe_id');
+            $table->json('missing_ingredients_ids')->nullable();
             $table->foreign('recipe_id')->references('id')->on('recipes');
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('status_id')->references('id')->on('statuses');
