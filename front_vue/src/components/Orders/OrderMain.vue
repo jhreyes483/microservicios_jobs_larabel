@@ -3,7 +3,14 @@
     <div class="container-fluid mt-4">
         <h2>Ordenes</h2>
         <div>
-          
+            <div class="col-md-4 col-4 mx-auto mt-5">
+                <Lavel>Seleccione estado</Lavel>
+                <select @change="getOrder" v-model="selectedStatus" id="movementStatus" class="form-select"
+                    placeholder="seleccione estado">
+                    <option v-for="status in statuses" :key="status.id" :value="status.id">{{
+                        status.name }}</option>
+                </select>
+            </div>
 
             <div v-if="isLoading" class="mt-5 spinner-border text-dark mt-4" role="status">
                 <span class="visually-hidden">Loading...</span>
@@ -26,8 +33,8 @@
                         <tr v-for="order in orders" :key="order.id">
                             <td>{{ order.id }}</td>
                             <td>{{ formatDateTime(order.created_at) }}</td>
-                              <td :style="{ background: order.status.color }">
-                                <span >
+                            <td :style="{ background: order.status.color }">
+                                <span>
                                     {{ order.status.name }}
                                 </span>
                             </td>
@@ -40,16 +47,19 @@
                                 </ul>
                             </td>
                             <td>
-                                <button @click="redirectToOrder(order.id)" class="btn btn-success btn-sm">Ver Detalles</button>
+                                <button @click="redirectToOrder(order.id)" class="btn btn-success btn-sm">Ver
+                                    Detalles</button>
                             </td>
                         </tr>
                     </tbody>
                 </table>
 
                 <div>
-                    <button class ="btn btn-sm btn-light" @click="changePage(currentPage - 1)" :disabled="currentPage === 1">Anterior</button>
+                    <button class="btn btn-sm btn-light" @click="changePage(currentPage - 1)"
+                        :disabled="currentPage === 1">Anterior</button>
                     {{ currentPage }}
-                    <button class ="btn btn-sm btn-light"  @click="changePage(currentPage + 1)" :disabled="currentPage === lastPage">Siguiente</button>
+                    <button class="btn btn-sm btn-light" @click="changePage(currentPage + 1)"
+                        :disabled="currentPage === lastPage">Siguiente</button>
                 </div>
             </div>
         </div>
@@ -67,20 +77,22 @@ export default {
             orders: {},
             isLoading: false,
             currentPage: 1,
-            lastPage: 1
+            lastPage: 1,
+            selectedStatus: null,
+            statuses: {}
         }
     },
     methods: {
         getOrder() {
             this.isLoading = true;
-            console.log('getOrders')
             updateServiceConfig(0, this.axios);
 
             let data = {
-                page: this.currentPage
+                page: this.currentPage,
+                status_id: this.selectedStatus
             }
 
-            this.axios.post('api/get_orders/', { data }).then(res => {
+            this.axios.post('api/get_orders/',  data ).then(res => {
                 if (res.data.status) {
                     this.isLoading = false;
                     this.orders = res.data.order.data;
@@ -114,6 +126,21 @@ export default {
             const dateTime = new Date(dateTimeString);
             return dateTime.toLocaleString("es-ES", options);
         },
+        getStatuses() {
+            updateServiceConfig(0, this.axios);
+            let data = {
+                status_ids: [4, 7]
+            }
+            this.axios.post('api/get_status', data).then(res => {
+                this.statuses = res.data.statuses;
+            }).catch(err => {
+                Swal.fire({
+                    icon: 'error',
+                    text: 'Error al registrar.',
+                });
+                console.error(err);
+            });
+        },
         redirectToOrder(orderId) {
             this.$router.push({ name: 'OrderDetail', query: { id: orderId } });
         }
@@ -122,6 +149,7 @@ export default {
     },
     mounted() {
         this.getOrder();
+        this.getStatuses()
     }
 
 }

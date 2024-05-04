@@ -36,6 +36,10 @@ class IngredientController extends Controller
                         ->where('job_type_id', $this->typeJobPurchase);
             $page      = $request->input('page', 1);
             $purchases = $purchases->orderBy('jobs.id', 'desc');
+
+            if($request->status_id){
+                $purchases->where('status_id', $request->status_id);
+            }
             $purchases = $purchases->paginate(10, ['*'], 'page', $page);
             $output['purchases'] = $purchases;
 

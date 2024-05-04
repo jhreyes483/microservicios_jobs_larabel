@@ -3,7 +3,13 @@
     <div class="container-fluid mt-4">
         <h2>Cola de compras en espera</h2>
     </div>
-
+    <div class="col-md-4 col-4 mx-auto mt-5">
+        <Lavel>Seleccione estado</Lavel>
+        <select @change="getPurchases" v-model="selectedStatus" id="movementReason" class="form-select" placeholder="seleccione estado">
+            <option v-for="status in statuses" :key="status.id" :value="status.id">{{
+                status.name }}</option>
+        </select>
+    </div>
     <div v-if="isLoading" class="mt-5 spinner-border text-dark mt-4" role="status">
         <span class="visually-hidden">Loading...</span>
     </div>
@@ -11,7 +17,7 @@
     <div v-else class="col-md-9 mx-auto">
         <div>
             <div>
-                <div class ="table-responsive mt-5">
+                <div class="table-responsive mt-5">
                     <table class="table table-striped table-hover">
                         <thead>
                             <tr>
@@ -60,30 +66,48 @@ export default {
             purchases: {},
             isLoading: false,
             currentPage: 1,
-            lastPage: 1
+            lastPage: 1,
+            selectedStatus: null,
+            statuses: {}
         };
     },
     mounted() {
         this.getPurchases()
+        this.getStatuses()
     },
     methods: {
-
         getPurchases() {
             this.isLoading = true;
             updateServiceConfig(1, this.axios);
             let data = {
-                page: this.currentPage
+                page: this.currentPage,
+                status_id: this.selectedStatus
             }
 
             this.axios.post('api/get_purchase/', data).then(res => {
                 if (res.data.status) {
                     this.isLoading = false;
-                    console.log(res.data.purchases.data)
                     this.purchases = res.data.purchases.data;
-                    this.lastPage =  res.data.purchases.last_page;
+                    this.lastPage = res.data.purchases.last_page;
                 }
             }).catch(err => {
                 this.isLoading = false;
+                Swal.fire({
+                    icon: 'error',
+                    text: 'Error al registrar.',
+                });
+                console.error(err);
+            });
+        },
+
+        getStatuses() {
+            updateServiceConfig(0, this.axios);
+            let data = {
+                status_ids: [4, 7]
+            }
+            this.axios.post('api/get_status', data).then(res => {
+                this.statuses = res.data.statuses;
+            }).catch(err => {
                 Swal.fire({
                     icon: 'error',
                     text: 'Error al registrar.',

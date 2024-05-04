@@ -62,9 +62,15 @@ class OrderController extends Controller
             function ($query) {
                 $query->withPivot('recipe_quantity');
             }])
-                ->with('Status')
-                ->orderBy('id', 'desc')
-                ->paginate(9, ['*'], 'page', $page);
+                ->with('Status');
+                $order =$order->orderBy('id', 'desc');
+
+
+                if($request->status_id){
+                   $order = $order->where('status_id', $request->status_id);
+                }
+
+            $order = $order->paginate(9, ['*'], 'page', $page);
             $output['order']   =  $order;
             if (!$order) {
                 $output['status'] =  false;
