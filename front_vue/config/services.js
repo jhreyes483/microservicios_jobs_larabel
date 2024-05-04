@@ -2,14 +2,16 @@ import { reactive } from 'vue';
 
 const state = reactive({
     service: [
-        { baseUrl: 'http://127.0.0.1:8000/', token: 'token1' },
-        { baseUrl: 'http://192.168.0.8:8000/', token: 'token2' },
+        { baseUrl: 'https://orders-service.fly.dev/', token: 'token1' },
+        { baseUrl: 'https://warehouse-ingredients-service.fly.dev/', token: 'token2' },
+        { baseUrl: 'https://farmers-market-service.fly.dev/', token: 'token3' },
         // Agrega más opciones según sea necesario
     ],
     selectedServiceIndex: 0, // Índice predeterminado
 });
 
 function updateServiceConfig(index, axios) {
+
     state.selectedServiceIndex = index;
     // Actualizar la URL base y el token en función del índice
     const { baseUrl } = state.service[index];

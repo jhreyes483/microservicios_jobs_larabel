@@ -16,23 +16,25 @@ import OrderMain from './components/Orders/OrderMain';
 import HistoricalMovement from './components/Inventory/HistoricalMovement';
 import RecipeMain from './components/Recipe/RecipeMain.vue';
 import HistoricalPurchase from './components/Inventory/HistoricalPurchase';
+import MarkertMain from './components/Marker/MarkertMain';
 
 const routes = [
-
 
     {
         path: '/home',
         component: HomeMain,
     },
     {
-        path : '/login',
+        path : '/',
         name : 'LoginUser',
         component: LoginUser,
     },
-
-
+    {
+        path : '/marker',
+        name : 'MarkertMain',
+        component: MarkertMain,
+    },
     /***nuevas  */
-
     {
         path : '/order/:id?',
         name : 'OrderDetail',

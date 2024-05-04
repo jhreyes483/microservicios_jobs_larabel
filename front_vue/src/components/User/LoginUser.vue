@@ -88,6 +88,33 @@ export default {
           });
         }
 
+        
+
+        setTimeout(() => {
+          if (isLoginFull) {
+            this.$router.push('/home');
+          }
+        }, 3000);
+
+      })
+
+      updateServiceConfig(2, this.axios);
+      this.axios.post('api/login', data).then(res => {
+        if (res.data.status == "success") {
+          console.log('s1--->>>', res.data.authorisation.token)
+          localStorage.setItem('access_token_3', res.data.authorisation.token);
+
+
+        } else {
+          isLoginFull = false;
+          Swal.fire({
+            icon: 'error',
+            text: 'Credenciales incorrectas',
+          });
+        }
+
+        
+
         setTimeout(() => {
           if (isLoginFull) {
             this.$router.push('/home');

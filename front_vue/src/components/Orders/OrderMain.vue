@@ -10,7 +10,7 @@
             </div>
 
 
-            <div v-else class="table-responsive col-md-8 mx-auto mt-5">
+            <div v-else class="table-responsive col-md-10 mx-auto mt-5">
                 <table class="table table-striped table-hover">
                     <thead class="thead-dark">
                         <tr>
@@ -40,7 +40,7 @@
                                 </ul>
                             </td>
                             <td>
-                                <button @click="redirectToOrder(order.id)" class="btn btn-success">Ver Detalles</button>
+                                <button @click="redirectToOrder(order.id)" class="btn btn-success btn-sm">Ver Detalles</button>
                             </td>
                         </tr>
                     </tbody>

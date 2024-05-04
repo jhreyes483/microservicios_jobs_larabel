@@ -16,7 +16,7 @@
                     </ul>
                     <ul class="navbar-nav navbar-right mr-auto">
                         <li class="nav-item">
-                            <router-link active-class="active" to="/login" class="nav-link">Login</router-link>
+                            <router-link active-class="active" to="/" class="nav-link">Login</router-link>
                         </li>
                         <li class="nav-item">
                             <router-link active-class="active" to="/home" class="nav-link">inicio</router-link>
@@ -27,13 +27,15 @@
                         <li class="nav-item">
                             <router-link active-class="active" to="/recipe" class="nav-link">Recetas</router-link>
                         </li>
-
                         <li class="nav-item">
                             <router-link active-class="active" to="/history_movoments" class="nav-link">Historico de movimientos</router-link>
                         </li>
                         
                         <li class="nav-item">
                             <router-link active-class="active" to="/purchase" class="nav-link">Historico de compras</router-link>
+                        </li>
+                        <li class="nav-item">
+                            <router-link active-class="active" to="/marker" class="nav-link">Plaza inventario</router-link>
                         </li>
                     </ul>
                 </div>
