@@ -66,7 +66,6 @@ class IngredientController extends Controller
 
 
             $movements = $movements->orderBy('id', 'desc');
-
             $page      = $request->input('page', 1);
             $movements = $movements->paginate(10, ['*'], 'page', $page);
             $output['movements'] = $movements;
@@ -92,7 +91,7 @@ class IngredientController extends Controller
             if (isset($request['ingredients']) && count($request['ingredients'])) {
                 $output['status'] = true;
                 $output['code'] = 200;
-                $output['msg'] = 'peticion okddda';
+                $output['msg'] = 'peticion ok...';
                 $output['process'] = [];
 
                 $allIngredintFull = true;

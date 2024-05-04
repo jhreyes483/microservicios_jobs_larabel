@@ -1,0 +1,49 @@
+# fly.toml app configuration file generated for warehouse-ingredients-service on 2024-05-03T15:03:52-05:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'warehouse-ingredients-service'
+primary_region = 'bog'
+console_command = 'php /var/www/html/artisan tinker'
+
+[build]
+  [build.args]
+    NODE_VERSION = '18'
+    PHP_VERSION = '7.4'
+
+[env]
+  APP_ENV = 'production'
+  LOG_CHANNEL = 'stderr'
+  LOG_LEVEL = 'info'
+  LOG_STDERR_FORMATTER = 'Monolog\Formatter\JsonFormatter'
+  SESSION_DRIVER = 'cookie'
+  SESSION_SECURE_COOKIE = 'true'
+
+  DB_CONNECTION = 'mysql'
+  APP_URL = 'https://warehouse-ingredients-service.fly.dev'
+  DB_PASSWORD = 'DbEH7JOkso0Bg9tdgTys'
+  DB_HOST = 'b5xy0qxd60p8fq3fimuc-mysql.services.clever-cloud.com'
+  DB_USERNAME = 'uhduxahexsrdwxob'
+  DB_DATABASE = 'b5xy0qxd60p8fq3fimuc'
+  URL_BUY_INGREDIENTS_SERVICE = 'https://farmers-market-service.fly.dev/'
+  URL_ORDER_INGREDIENTS_SERVICE = 'https://orders-service.fly.dev/'
+  EMAIL_SYSTEM = 'jav-rn@hotmail.com'
+  PASS_SYSTEM = 'password'
+
+[processes]
+app = ""
+worker = "php artisan schedule:work"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app', 'worker']
+
+[[vm]]
+  memory = '1gb'
+  cpu_kind = 'shared'
+  cpus = 1

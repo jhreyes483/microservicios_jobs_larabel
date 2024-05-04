@@ -13,7 +13,7 @@ trait ClientHttp
 
         return [
             'buyLogin'                    =>  $urlWarehouseService . 'api/login/',
-            'buyIngredient'               =>  $urlWarehouseService . 'marker/'
+            'buyIngredient'               =>  $urlWarehouseService . 'api/farmers-market/buy/'
         ];
     }
 
@@ -21,7 +21,7 @@ trait ClientHttp
     {
         $urlOrderService =  config('alegra_services.URL_ORDER_INGREDIENTS_SERVICE');
         return [
-            'orderLogin'                    =>  $urlOrderService  . 'api/login/',
+            'orderLogin'                  =>  $urlOrderService  . 'api/login/',
             'receiveIngredient'           =>  $urlOrderService . 'api/job/receive_ingredient'
         ];
      }
@@ -70,13 +70,15 @@ trait ClientHttp
         $output['msg']    = 'Usuario no logeado';
 
         $email = !$isSistem ? Auth::user()->email : config('alegra_services.EMAIL_SYSTEM');
-        $autUser = ['email' =>$email, 'password' => 'test'];
+        $password = !$isSistem ? Auth::user()->email : config('alegra_services.PASS_SYSTEM');
+        $autUser = ['email' =>$email, 'password' => $password ];
         $login   = $this->sendHttp(
             $this->getBuyUrlService()['buyLogin'],
             $autUser,
             'POST',
             []
         );
+
         $this->saveHttpLog( $autUser , $login, 1, $login['status']??false , $this->getBuyUrlService()['buyLogin']);
 
         if ($login && isset($login['data']['status']) && $login['data']['status']) {
@@ -93,7 +95,7 @@ trait ClientHttp
         $output['status'] = false;
         $output['msg']    = 'Usuario no logeado';
 
-        $password = !$isSistem ? Auth::user()->password : config('alegra_services.PASSWORD_SYSTEM');
+        $password = !$isSistem ? Auth::user()->password : config('alegra_services.PASS_SYSTEM');
         $email    = !$isSistem ? Auth::user()->email : config('alegra_services.EMAIL_SYSTEM');
         $autUser  = ['email' =>$email, 'password' => $password];
         $login    = $this->sendHttp(

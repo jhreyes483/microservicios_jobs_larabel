@@ -27,7 +27,7 @@ class IngredientInventory extends Controller
 
     }
 
-
+    
     public function consumerProdunct($ingredientIn, $externalOrderId = null): array
     {
         $output['status'] = false;
@@ -38,7 +38,12 @@ class IngredientInventory extends Controller
             $ingredientIn['quantity'] = $ingredientIn['pivot']['recipe_quantity']; /** se debe descontar lo de la receta no lo que tiene el producto en cocina */
             if ($ingredient->quantity - $ingredientIn['quantity'] <=  0) {
 
-                $response = $this->buyIngredient($ingredientIn, $ingredient);#
+                $response = $this->buyIngredient($ingredientIn, $ingredient);
+                if(isset($response['quantitySold']) ){
+                    if($response['quantitySold'] > $ingredientIn['quantity']){
+                        $this->movementInvetory($ingredient->id, $ingredientIn['quantity'], 1 /* suna */, 4 /* se reserva excedente de compra */);
+                    }
+                }
                 if ($response['status']) {
                     $this->movementInvetory($ingredient->id, $ingredientIn['quantity'], 2 /* resta */, 3 /* entra de producto */);
                     $output['status'] = true;
@@ -52,7 +57,7 @@ class IngredientInventory extends Controller
                 $output['status'] = true;
                 $output['msg'] = 'se consumio producto de bodega';
             }
-        } 
+        }
 
         return $output;
     }
@@ -70,20 +75,21 @@ class IngredientInventory extends Controller
             'POST',
             $login
         );
+
         $this->saveHttpLog(['ingredient' => $ingredientIn['name']], $resp, 1, $resp['status'] , $this->getBuyUrlService()['buyIngredient']);
-
         if (!$resp['status']) return ['status' => false, 'msg' => 'error en respuesta http'];
-        if (!isset($resp['data']['quanitySold'])) return ['status' => false, 'msg' => 'no se retorno quanitySold de market'];
-        if($resp['data']['quanitySold'] == 0) return ['status'=>false, 'msg', 'No hay existencias en plaza', 'quanitySold'=> $resp['data']['quanitySold'] ];
+        if (!isset($resp['data']['quantitySold'])) return ['status' => false, 'msg' => 'no se retorno quantitySold de market'];
+        if($resp['data']['quantitySold'] == 0) return ['status'=>false, 'msg', 'No hay existencias en plaza', 'quantitySold'=> $resp['data']['quantitySold'] ];
 
-        $quantityBuy          = ((int) $resp['data']['quanitySold']) ?? 0;
+
+        $quantityBuy          = ((int) $resp['data']['quantitySold']) ?? 0;
 
         if ($quantityBuy > 0) {
             $reasonId = $isJob ? 1 /* compra por espera */: 2 /* compra inmediata */ ;
             $log = $this->movementInvetory($ingredientIn['id'], $quantityBuy, 1 /* suma */,$reasonId);
         }
         $ingredient           = Ingredient::where('name', $ingredientIn['name'])->first();
-        return ['status' => 'ok', 'msg' => 'se realizo la compra', 'quantity' => $ingredient->quantity, 'ingredient' => $ingredientIn['name']];
+        return ['status' => 'ok', 'msg' => 'se realizo la compra', 'quantity' => $ingredient->quantity, 'ingredient' => $ingredientIn['name'], 'quantitySold'=> $quantityBuy ];
     }
 
 
@@ -99,7 +105,7 @@ class IngredientInventory extends Controller
 
         if (count($jobsPending)){
             foreach($jobsPending as $job){
-                
+
                 $ingredientIn = Ingredient::where('id', $job->model_id )->first()->toArray();
                 $resp = $this->buyIngredient($ingredientIn  , true);
 
@@ -123,12 +129,12 @@ class IngredientInventory extends Controller
                     $job->retry ++;
                 }
                 $job->save();
-          
-     
+
+
             }
 
             $output['msg'] = 'se ejecutaron todos los pendiente';
-        
+
         }
         return $output;
     }

@@ -26,7 +26,8 @@ class CreateReasonOfMovementsTable extends Migration
         DB::table('reason_of_movements')->insert([
             ['id'=>1, 'name'=>'compra por espera','description'=>'Compra por que el producto estaba agotado en la plaza (job)', 'created_at'=> Carbon::now()->toDateTimeString(), 'updated_at' =>  Carbon::now()->toDateTimeString()],
             ['id'=>2, 'name'=>'compra de producto inmediata','description'=>'Compra inmediata en la plaza' , 'created_at'=> Carbon::now()->toDateTimeString(), 'updated_at' =>  Carbon::now()->toDateTimeString()],
-            ['id'=>3, 'name'=>'entrega de producto', 'description'=>'Se entrega producto de un pedido solicitado' , 'created_at'=> Carbon::now()->toDateTimeString(), 'updated_at' =>  Carbon::now()->toDateTimeString() ]
+            ['id'=>3, 'name'=>'entrega de producto', 'description'=>'Se entrega producto de un pedido solicitado' , 'created_at'=> Carbon::now()->toDateTimeString(), 'updated_at' =>  Carbon::now()->toDateTimeString() ],
+            ['id'=>4, 'name'=>'se reserva excedente de compra', 'description'=>'Llega una compra de ingrediente pendiente y reserva el excedente (suma)' , 'created_at'=> Carbon::now()->toDateTimeString(), 'updated_at' =>  Carbon::now()->toDateTimeString() ]
         ]);
     }
 

@@ -13,11 +13,13 @@ class JobController extends Controller
     {
         $output['status'] = true;
         $output['msg'] = 'Ya se habia hagendado otra compra para este modelo';
-
+      
         $jobIsAlreadyScheduled = Job::where('model_id', $modelId)
             ->where('job_type_id', $jobTypeId)
             ->where('status_id', 4)
+            ->where('external_order_id',$externalOderId )
             ->first();
+    
 
         if (!$jobIsAlreadyScheduled) {
             $output['msg'] = 'Se crea tarea de compra';
