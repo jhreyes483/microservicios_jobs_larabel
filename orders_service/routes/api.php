@@ -29,6 +29,7 @@ Route::apiResource('orders', OrderController::class)->only([ 'store', 'show'])->
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/get_orders', [OrderController::class, 'index']);
     Route::post('/recipe', [RecipeController::class, 'index']);
+    Route::post('/get_status', [OrderController::class, 'getStatus']);
     Route::post('/recipe/get_complements', [RecipeController::class, 'getComplements']);
     Route::post('/job/receive_ingredient', [OrderController::class, 'receiveIngredient']);
 });

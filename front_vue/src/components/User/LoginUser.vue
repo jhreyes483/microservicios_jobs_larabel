@@ -51,7 +51,7 @@ export default {
     authLogin() {
       var isLoginFull = true;
       updateServiceConfig(0, this.axios);
-    
+
       var data = {
         email: this.login.email,
         password: this.login.password
@@ -70,16 +70,12 @@ export default {
 
         }
       })
-      console.log('end token 1');
-
 
       updateServiceConfig(1, this.axios);
       this.axios.post('api/login', data).then(res => {
         if (res.data.status == "success") {
-          console.log('s1--->>>', res.data.authorisation.token)
+          console.log('t2--->>>', res.data.authorisation.token)
           localStorage.setItem('access_token_1', res.data.authorisation.token);
-
-
         } else {
           isLoginFull = false;
           Swal.fire({
@@ -87,15 +83,6 @@ export default {
             text: 'Credenciales incorrectas',
           });
         }
-
-        
-
-        setTimeout(() => {
-          if (isLoginFull) {
-            this.$router.push('/home');
-          }
-        }, 3000);
-
       })
 
       updateServiceConfig(2, this.axios);
@@ -112,16 +99,15 @@ export default {
             text: 'Credenciales incorrectas',
           });
         }
-
-        
-
-        setTimeout(() => {
-          if (isLoginFull) {
-            this.$router.push('/home');
-          }
-        }, 3000);
-
       })
+
+      setTimeout(() => {
+        if (isLoginFull) {
+          this.$router.push('/home');
+        }
+      }, 3000);
+
+
     }
   }
 }

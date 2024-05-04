@@ -5,14 +5,16 @@ namespace App\Http\Controllers\Order;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\ClientHttp;
-use App\Models\Ingredient;
+use App\Models\ConfigService;
+
 use App\Models\Order;
 use App\Models\Recipe;
-use App\Models\RecipeIngredient;
+
+use App\Models\Status;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use App\Models\Config;
+
 
 class OrderController extends Controller
 {
@@ -88,7 +90,7 @@ class OrderController extends Controller
         $output['code']   = 200;
         try {
             DB::beginTransaction();
-            $config = Config::where('active', true)->first();
+            $config = ConfigService::where('active', true)->first();
             switch ($config->id) {
                 case 1:
                     $output = $this->createOrderIngredientIsset();
@@ -139,7 +141,10 @@ class OrderController extends Controller
         return $output;
     }
 
-    private function createOrderIngredientIsset()
+    /**
+     * @return array
+     */
+    private function createOrderIngredientIsset() : array
     {
         $output['status'] =  true;
         $output['msg']    = 'ok';
@@ -152,7 +157,7 @@ class OrderController extends Controller
             if ($platters && isset($platters['id'])) {
                 $login = $this->auth->toLoginWarehouseService();
 
-                if (!$login['status']) return ['status' => false, 'msg' => 'error de autenticacion w', 'code' => 500];
+                if (!$login['data']['status'] ?? false &&  $login['data']['status'] != "success"  ) return ['status' => false, 'msg' => 'error de autenticacion w..', 'code' => 500];
 
                 $recipe = Recipe::with('Ingredients')->where('recipes.id', $platters['id'])->get()->toArray();
 
@@ -179,6 +184,7 @@ class OrderController extends Controller
                 }
             }
         }
+        return $output;
     }
 
     private function createOrderIngredientAll(): array
@@ -195,8 +201,7 @@ class OrderController extends Controller
 
         if ($recipe && isset($recipe['id'])) {
             $login = $this->auth->toLoginWarehouseService();
-
-            if (!$login['status']) return ['status' => false, 'msg' => 'error de autenticacion w', 'code' => 500];
+            if (! ($login['data']['status'] ?? false) &&  $login['data']['status'] != "success"  ) return ['status' => false, 'msg' => 'error de autenticacion w..', 'code' => 500];
 
             $order            = new Order();
             $order->status_id = $this->statusPending;
@@ -204,13 +209,14 @@ class OrderController extends Controller
             $order->recipe_id = $recipe['id'];
             $order->save();
 
-            if(isset($recipe['ingredients']) && count($recipe['ingredients'])) foreach ($recipe['ingredients'] as $ingredient){
+            if(isset($recipe['ingredients']) && count($recipe['ingredients'])) {
                 $resp = $this->sendHttp(
                     $this->getUrlWarehouseService()['warehouseIngredientMass'],
                     ['ingredients' => $recipe['ingredients'], 'external_order_id' => $order->id ],
                     'POST',
                     $login['data']['authorisation']
                 );
+
                 $status = $resp['status']['data']['status']??false;
                 if(!$status && isset($resp['data']['pendings'])  && count($resp['data']['pendings'])  ){
                     $typeOrder    = 'partial';
@@ -233,9 +239,10 @@ class OrderController extends Controller
         $output['status'] =  true;
         $output['msg']    = 'ok';
         $output['code']   = 200;
-
         if($request->ingredient_id && $request->external_order_id){
+
             $order                = Order::where('id', $request->external_order_id)->first();
+
             $ingredientPendingIds = array_unique(json_decode($order->missing_ingredients_ids));
 
             $id = $request->ingredient_id;
@@ -243,12 +250,23 @@ class OrderController extends Controller
                 return $value !== $id;
             }));
 
+
             $order->missing_ingredients_ids = json_encode($ingredientPendingIds );
             $order->status_id = count($ingredientPendingIds) ? $this->statusPending : $this->statusEnd;
             $order->save();
         }
 
         return $output;
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    public function getStatus(Request $request): array
+    {
+         $statuses = Status::whereIn('id' , $request->status_ids)->get();
+         return ['statuses'=>$statuses];
     }
 
 }

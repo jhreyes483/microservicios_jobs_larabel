@@ -24,6 +24,11 @@ RUN composer install --optimize-autoloader --no-dev \
     && cp .fly/entrypoint.sh /entrypoint \
     && chmod +x /entrypoint
 
+# Install cron and start cron service JOBS
+RUN apt-get update && apt-get install -y cron \
+    && echo "MAILTO=\"\"\n* * * * * www-data /usr/bin/php /var/www/html/artisan schedule:run >> /dev/null 2>&1" | crontab - \
+    && service cron start
+
 # Laravel 11 made changes to how trusting all proxies works, see https://laravel.com/docs/11.x/requests#trusting-all-proxies and https://laravel.com/docs/10.x/requests#trusting-all-proxies
 RUN if php artisan --version | grep -q "Laravel Framework 1[1-9]"; then \
     sed -i='' '/->withMiddleware(function (Middleware \$middleware) {/a\

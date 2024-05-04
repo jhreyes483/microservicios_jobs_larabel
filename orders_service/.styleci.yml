@@ -12,3 +12,7 @@ js:
     not-name:
       - webpack.mix.js
 css: true
+ volumes:
+      - .:/var/www/html
+      - ./cronfile:/etc/cron.d/laravel-cron
+    networks:
