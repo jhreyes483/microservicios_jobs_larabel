@@ -2,7 +2,7 @@
     <div class="container-fluid mt-4">
         <h2>Ordenes</h2>
         <div>
-            <div class="col-md-2 col-4 mx-auto mt-5">
+            <div class="col-md-2 mx-auto mt-5">
                 <Lavel>Estado</Lavel>
                 <select @change="getOrder" v-model="selectedStatus" id="movementStatus" class="form-select"
                    >

@@ -40,7 +40,7 @@ AppFooter {
 }
 
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: sans-serif, Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
@@ -52,6 +52,8 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  background-color: rgb(255, 255, 255) !important;
+  font-weight: 200;
 }
 
 .wrapper {

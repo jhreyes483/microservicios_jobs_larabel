@@ -21,6 +21,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('/login', [AuthController::class, 'login']);
-Route::post('/farmers-market/buy',[IngredientController::class,'buy'] );
-Route::post('/farmers-market/get',[IngredientController::class,'get'] );
-Route::post('/farmers-market/update',[IngredientController::class,'update'] );
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/farmers-market/buy', [IngredientController::class, 'buy']);
+    Route::post('/farmers-market/get', [IngredientController::class, 'get']);
+    Route::post('/farmers-market/update', [IngredientController::class, 'update']);
+});

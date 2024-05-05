@@ -21,7 +21,8 @@
               </div>
               <br>
               <div class="form-group">
-                <button type="submit" class="btn btm-alegra btn-success mt-2"> Ingresar <i class="fas fa-sign-in-alt"></i></button>
+                <button type="submit" class="btn btm-alegra btn-success mt-2"> Ingresar <i
+                    class="fas fa-sign-in-alt"></i></button>
               </div>
             </form>
           </div>
@@ -34,13 +35,12 @@
 
 <script>
 import Swal from 'sweetalert2';
-import {updateServiceConfig } from '../../../config/services';
+import { updateServiceConfig } from '../../../config/services';
+
 export default {
   name: "LoginUser",
   data() {
     return {
-      isLoginFull: true,
-      emailRegex: /^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i,
       login: {
         email: '',
         password: ''
@@ -48,71 +48,44 @@ export default {
     }
   },
   methods: {
-    authLogin() {
-      var isLoginFull = true;
-      updateServiceConfig(0, this.axios);
-
-      var data = {
+    async loginMicroservice(codeMicoService) {
+      updateServiceConfig(codeMicoService, this.axios);
+      const data = {
         email: this.login.email,
         password: this.login.password
+      };
+
+      try {
+        const response = await this.axios.post('api/login', data);
+        if (response.data.status === "success") {
+          console.log('t-->>>' + codeMicoService, response.data.authorisation.token);
+          localStorage.setItem('access_token_' + codeMicoService, response.data.authorisation.token);
+          return true;
+        } else {
+          Swal.fire({
+            icon: 'error',
+            text: 'Credenciales incorrectas',
+          });
+          return false;
+        }
+      } catch (error) {
+        console.error('Login error:', error);
+        Swal.fire({
+          icon: 'error',
+          text: 'Error al procesar el login',
+        });
+        return false;
       }
-      console.log(data, 'data');
-      this.axios.post('api/login', data).then(res => {
-        if (res.data.status == "success") {
-          console.log('t0--->>>', res.data.authorisation.token)
-          localStorage.setItem('access_token_0', res.data.authorisation.token);
-        } else {
-          isLoginFull = false;
-          Swal.fire({
-            icon: 'error',
-            text: 'Credenciales incorrectas',
-          });
+    },
 
-        }
-      })
-
-      updateServiceConfig(1, this.axios);
-      this.axios.post('api/login', data).then(res => {
-        if (res.data.status == "success") {
-          console.log('t2--->>>', res.data.authorisation.token)
-          localStorage.setItem('access_token_1', res.data.authorisation.token);
-        } else {
-          isLoginFull = false;
-          Swal.fire({
-            icon: 'error',
-            text: 'Credenciales incorrectas',
-          });
-        }
-      })
-
-      updateServiceConfig(2, this.axios);
-      this.axios.post('api/login', data).then(res => {
-        if (res.data.status == "success") {
-          console.log('s1--->>>', res.data.authorisation.token)
-          localStorage.setItem('access_token_3', res.data.authorisation.token);
-
-
-        } else {
-          isLoginFull = false;
-          Swal.fire({
-            icon: 'error',
-            text: 'Credenciales incorrectas',
-          });
-        }
-      })
-
-      setTimeout(() => {
-        if (isLoginFull) {
-          this.$router.push('/home');
-        }
-      }, 3000);
-
-
+    async authLogin() {
+      let loginSuccess = await this.loginMicroservice(0);
+      if (loginSuccess) loginSuccess = await this.loginMicroservice(1);
+      if (loginSuccess) loginSuccess = await this.loginMicroservice(2);
+      if (loginSuccess) this.$router.push('/home');
     }
   }
 }
-
-
 </script>
 
 <style>

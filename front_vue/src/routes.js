@@ -1,10 +1,4 @@
 
-
-
-/*** new * */
-
-
-
 import HomeMain from './components/Home/HomeMain.vue';
 import AppErrorComponent from './components/AppErrorComponent.vue';
 
@@ -18,64 +12,63 @@ import RecipeMain from './components/Recipe/RecipeMain.vue';
 import HistoricalPurchase from './components/Inventory/HistoricalPurchase';
 import MarkertMain from './components/Marker/MarkertMain';
 
+
 const routes = [
 
-
-    {
-        path: '/home',
-        component: HomeMain,
-    },
     {
         path : '/',
         name : 'LoginUser',
         component: LoginUser,
     },
     {
+        path: '/home',
+        component: HomeMain,
+        meta: { requiresAuth: true }
+    },
+    {
         path : '/marker',
         name : 'MarkertMain',
         component: MarkertMain,
+        meta: { requiresAuth: true }
+
     },
-
-
-
-    /***nuevas  */
-
     {
         path : '/order/:id?',
         name : 'OrderDetail',
         component: OrderDetail,
+        meta: { requiresAuth: true }
     },
     {
         path: '/orders',
         name: 'OrderMain',
-        component: OrderMain
+        component: OrderMain,
+        meta: { requiresAuth: true }
     },
     {
         path: '/recipe',
         name: 'RecipeMain',
-        component: RecipeMain 
+        component: RecipeMain,
+        meta: { requiresAuth: true }
     },
     {
         path: '/history_movoments',
         name: 'HistoricalMovement',
-        component: HistoricalMovement
+        component: HistoricalMovement,
+        meta: { requiresAuth: true }
     },
     {
         path: '/purchase',
         name: 'HistoricalPurchase',
-        component: HistoricalPurchase 
+        component: HistoricalPurchase ,
+        meta: { requiresAuth: true }
     },
- 
-
     {
         path: '/:pathMatch(.*)*',
-        component: AppErrorComponent
+        component: AppErrorComponent,
 
     },
     
 ];
-
-
 
 export default routes;
 
