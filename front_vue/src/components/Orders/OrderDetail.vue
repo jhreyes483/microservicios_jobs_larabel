@@ -58,7 +58,7 @@
 </template>
 <script>
 import Swal from 'sweetalert2';
-import updateServiceConfig from '../../../config/services';
+import {updateServiceConfig } from '../../../config/services';
 
 export default {
      name: 'OrderDeital',
@@ -102,7 +102,7 @@ export default {
             }).catch(err => {
                 Swal.fire({
                     icon: 'error',
-                    text: 'Error al registrar.',
+                    text: 'Error en petición.',
                 });
                 console.error(err);
             });

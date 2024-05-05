@@ -49,4 +49,5 @@ class RecipeController extends Controller
         $ingredient = Ingredient::select('id', 'name')->get();
         return ['status' => true, 'data' => ['ingredient' => $ingredient], 'code' => 200];
     }
+
 }

@@ -1,12 +1,12 @@
 <template>
-
     <div class="container-fluid mt-4">
         <h2>Ordenes</h2>
         <div>
-            <div class="col-md-4 col-4 mx-auto mt-5">
-                <Lavel>Seleccione estado</Lavel>
+            <div class="col-md-2 col-4 mx-auto mt-5">
+                <Lavel>Estado</Lavel>
                 <select @change="getOrder" v-model="selectedStatus" id="movementStatus" class="form-select"
-                    placeholder="seleccione estado">
+                   >
+                   <option selected value="0">Seleccione...</option>
                     <option v-for="status in statuses" :key="status.id" :value="status.id">{{
                         status.name }}</option>
                 </select>
@@ -47,8 +47,9 @@
                                 </ul>
                             </td>
                             <td>
-                                <button @click="redirectToOrder(order.id)" class="btn btn-success btn-sm">Ver
-                                    Detalles</button>
+                                <button @click="redirectToOrder(order.id)" class="btn btn-success btn-sm">
+                                    <i class="fas fa-search"></i> 
+                                  </button>
                             </td>
                         </tr>
                     </tbody>
@@ -56,10 +57,14 @@
 
                 <div>
                     <button class="btn btn-sm btn-light" @click="changePage(currentPage - 1)"
-                        :disabled="currentPage === 1">Anterior</button>
+                        :disabled="currentPage === 1">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
                     {{ currentPage }}
                     <button class="btn btn-sm btn-light" @click="changePage(currentPage + 1)"
-                        :disabled="currentPage === lastPage">Siguiente</button>
+                        :disabled="currentPage === lastPage">
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
                 </div>
             </div>
         </div>
@@ -68,7 +73,7 @@
 
 <script>
 import Swal from 'sweetalert2';
-import updateServiceConfig from '../../../config/services';
+import {updateServiceConfig } from '../../../config/services';
 export default {
 
     name: 'OrderMain',
@@ -78,7 +83,7 @@ export default {
             isLoading: false,
             currentPage: 1,
             lastPage: 1,
-            selectedStatus: null,
+            selectedStatus: 0,
             statuses: {}
         }
     },
@@ -103,7 +108,7 @@ export default {
                 this.isLoading = false;
                 Swal.fire({
                     icon: 'error',
-                    text: 'Error al registrar.',
+                    text: 'Error en petición.',
                 });
                 console.error(err);
             });
@@ -136,7 +141,7 @@ export default {
             }).catch(err => {
                 Swal.fire({
                     icon: 'error',
-                    text: 'Error al registrar.',
+                    text: 'Error en petición.',
                 });
                 console.error(err);
             });

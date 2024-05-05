@@ -1,7 +1,6 @@
 <template>
 
-   
-
+<link href="https://solucionesintegralesmallorca.com/portafoliojav//public/css/fonts1.css" rel="stylesheet">
     <div class="container-fluid mt-4 col-md-9">
         <h2 >Historico movimientos warehouse</h2>
         <div>
@@ -9,24 +8,23 @@
                 <div class="row">
                     <div class="col-md-3 mb-3">
                         <label for="movementType">Tipo de Movimiento</label>
-                        <select v-model="selectedMovementType" id="movementType" class="form-select"
-                            placeholder="seleccione tipo">
-                            <option v-for="type in movementTypes" :key="type.id" :value="type.id">{{ type.name }}
-                            </option>
+                        <select v-model="selectedMovementType" id="movementType" class="form-select">
+                            <option selected value="0">Seleccione...</option>
+                            <option v-for="type in movementTypes" :key="type.id" :value="type.id">{{ type.name }}</option>
                         </select>
                     </div>
 
                     <div class="col-md-3 mb-3">
-                        <label for="movementReason">Razón de Movimiento:</label>
-                        <select v-model="selectedMovementReason" id="movementReason" class="form-select"
-                            placeholder="seleccione tipo">
-                            <option v-for="reason in movementReasons" :key="reason.id" :value="reason.id">{{
-                                reason.name }}</option>
+                        <label for="movementReason">Razón de Movimiento</label>
+                        <select v-model="selectedMovementReason" id="movementReason" class="form-select">
+                            <option selected value="0">Seleccione...</option>
+                            <option v-for="reason in movementReasons" :key="reason.id" :value="reason.id">{{reason.name }}</option>
                         </select>
                     </div>
                     <div class="col-md-3 mb-3">
-                        <label for="movementIngredient">Ingredientess:</label>
+                        <label for="movementIngredient">Ingredientes</label>
                         <select v-model="selectedIngredient" id="movementIngredient" class="form-select">
+                            <option selected value="0">Seleccione...</option>
                             <option v-for="ingredient in movementIngredients" :key="ingredient.id"
                                 :value="ingredient.id">{{
                                     ingredient.name }}
@@ -36,7 +34,7 @@
 
                     <div class="col-md-3 mb-3 mt-4">
                         <label></label>
-                        <button class="btn btm-alegra" @click="getMovements">Buscar</button>
+                        <button class="btn btm-alegra" @click="getMovements">Buscar <i class="fas fa-search"></i></button>
                     </div>
 
                 </div>
@@ -79,10 +77,14 @@
                 </table>
                 <div>
                     <button class="btn btn-sm btn-light" @click="changePage(currentPage - 1)"
-                        :disabled="currentPage === 1">Anterior</button>
+                        :disabled="currentPage === 1">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
                     {{ currentPage }}
                     <button class="btn btn-sm btn-light" @click="changePage(currentPage + 1)"
-                        :disabled="currentPage === lastPage">Siguiente</button>
+                        :disabled="currentPage === lastPage">
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
                 </div>
             </div>
         </div>
@@ -97,7 +99,7 @@
 
 <script>
 import Swal from 'sweetalert2';
-import updateServiceConfig from '../../../config/services';
+import {updateServiceConfig} from '../../../config/services';
 export default {
     name: "HistoricalMovements",
     data() {
@@ -107,9 +109,9 @@ export default {
             movementTypes: [],
             movementReasons: [],
             movementIngredients: [],
-            selectedMovementType: null,
-            selectedMovementReason: null,
-            selectedIngredient: null,
+            selectedMovementType: 0,
+            selectedMovementReason: 0,
+            selectedIngredient: 0,
             currentPage: 1,
             lastPage: 1
 
@@ -139,7 +141,7 @@ export default {
                 this.isLoading = false;
                 Swal.fire({
                     icon: 'error',
-                    text: 'Error al registrar.',
+                    text: 'Error en petición..',
                 });
                 console.error(err);
             });
@@ -158,12 +160,14 @@ export default {
                 this.isLoading = false;
                 Swal.fire({
                     icon: 'error',
-                    text: 'Error al registrar.',
+                    text: 'Error en petición.',
                 });
                 console.error(err);
             });
 
         },
+     
+
         changePage(page) {
             console.log("page", page);
             this.currentPage = page;

@@ -5,6 +5,9 @@ namespace App\Http\Helpers;
 trait ClientHttp
 {
 
+    /**
+     * @return string[]
+     */
     public function getUrlWarehouseService() :array
     {
         $urlWarehouseService    = config('alegra_services.URL_WAREHOUSE_INGREDIENTS_SERVICE');
@@ -12,10 +15,17 @@ trait ClientHttp
         return [
             'warehouseLoginService'   =>  $urlWarehouseService.'api/login',
             'warehouseIngredient'     =>  $urlWarehouseService.'api/ingredints',
-            'warehouseIngredientMass' =>   $urlWarehouseService.'api/ingredints_mass'
+            'warehouseIngredientMass' =>  $urlWarehouseService.'api/ingredints_mass'
         ];
     }
 
+    /**
+     * @param string $url
+     * @param array $params
+     * @param string $method
+     * @param $authorization
+     * @return array
+     */
     public function sendHttp(string $url, array $params = [], string $method = 'POST', $authorization = []): array
     {
         try{

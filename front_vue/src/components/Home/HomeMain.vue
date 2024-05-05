@@ -5,14 +5,14 @@
 
   <div class="col-md-8 mx-auto ">
     <br>
-    <div class="btn btm-alegra my-1" @click="askForOrder"> Ordenar un plato </div>
+    <div class="btn btm-alegra my-1" @click="askForOrder"> Ordenar un plato <i class="fas fa-utensils"></i></div>
     <br>
 
   </div>
 </template>
 <script>
 import AppSlider from '../AppSlider.vue';
-import updateServiceConfig from '../../../config/services';
+import { updateServiceConfig } from '../../../config/services';
 import Swal from 'sweetalert2';
 export default {
 
@@ -45,7 +45,7 @@ export default {
       }).catch(err => {
         Swal.fire({
           icon: 'error',
-          text: 'Error al registrar.',
+          text: 'Error en petición.',
         });
         console.error(err);
       });

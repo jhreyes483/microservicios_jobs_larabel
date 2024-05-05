@@ -21,7 +21,7 @@
               </div>
               <br>
               <div class="form-group">
-                <button type="submit" class="btn btm-alegra btn-success mt-2">Ingresar</button>
+                <button type="submit" class="btn btm-alegra btn-success mt-2"> Ingresar <i class="fas fa-sign-in-alt"></i></button>
               </div>
             </form>
           </div>
@@ -34,7 +34,7 @@
 
 <script>
 import Swal from 'sweetalert2';
-import updateServiceConfig from '../../../config/services';
+import {updateServiceConfig } from '../../../config/services';
 export default {
   name: "LoginUser",
   data() {

@@ -14,6 +14,7 @@ use App\Models\Status;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 
 class OrderController extends Controller
@@ -273,6 +274,18 @@ class OrderController extends Controller
     {
          $statuses = Status::whereIn('id' , $request->status_ids)->get();
          return ['statuses'=>$statuses];
+    }
+
+    public function getImage($filename)
+    {
+        $path = "images/$filename";
+
+        if (Storage::disk('public')->exists($path)) {
+            $file = Storage::disk('public')->get($path);
+            $type = Storage::disk('public')->mimeType($path);
+            return response($file, 200)->header('Content-Type', $type);
+        }
+        return response()->json(['error' => 'File not found.'], 404);
     }
 
 }

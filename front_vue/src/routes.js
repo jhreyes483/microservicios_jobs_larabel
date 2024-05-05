@@ -20,6 +20,7 @@ import MarkertMain from './components/Marker/MarkertMain';
 
 const routes = [
 
+
     {
         path: '/home',
         component: HomeMain,
@@ -34,7 +35,11 @@ const routes = [
         name : 'MarkertMain',
         component: MarkertMain,
     },
+
+
+
     /***nuevas  */
+
     {
         path : '/order/:id?',
         name : 'OrderDetail',
@@ -68,9 +73,9 @@ const routes = [
 
     },
     
-
-
 ];
+
+
 
 export default routes;
 

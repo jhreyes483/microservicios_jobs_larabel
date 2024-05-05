@@ -23,6 +23,7 @@ class CreateIngredientsTable extends Migration
             $table->unsignedBigInteger('measure_id');
             $table->foreign('measure_id')->references('id')->on('measures');
             $table->foreign('status_id')->references('id')->on('statuses');
+            $table->string('img')->nullable();
             $table->timestamps();
         });
 

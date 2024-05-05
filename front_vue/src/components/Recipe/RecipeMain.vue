@@ -9,6 +9,7 @@
                 <div class="col-md-3 mb-3">
                     <label for="movementIngredient">Ingrediente:</label>
                     <select class="form-select" v-model="selectedIngredient" aria-label="Default select example">
+                        <option selected value="0">Seleccione...</option>
                         <option v-for="ingredient in movementIngredients" :key="ingredient.id" :value="ingredient.id">{{
                             ingredient.name }}
                         </option>
@@ -18,7 +19,7 @@
                 <div class="col-md-3 mb-3 mt-4">
                     <label></label>
                     <button class="btn btn-alegra" style="background-color: #30aba9;   color: #ffff;"
-                        @click="getRecipes">Buscar</button>
+                        @click="getRecipes">Buscar <i class="fas fa-search"></i></button>
                 </div>
             </div>
         </div>
@@ -28,12 +29,13 @@
         </div>
 
         <div v-else class="table-responsive ">
-            <table class="table table-striped table-hover">
+            <table class="table table-striped table-hover col-md-4 col-12">
                 <thead class="thead-dark">
                     <tr>
                         <th>ID</th>
-                        <th>Name</th>
-                        <th>Ingredients</th>
+                        <th>Receta</th>
+                        <th>Ingredientes</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -43,9 +45,12 @@
                         <td>
                             <ul class="list-unstyled">
                                 <li v-for="ingredient in recipe.ingredients" :key="ingredient.id">
-                                    {{ ingredient.name }} ({{ ingredient.pivot.recipe_quantity }})
+                                    {{ ingredient.name }} ({{ ingredient.pivot.recipe_quantity }}) 
                                 </li>
                             </ul>
+                        </td>
+                        <td>
+                            <img :src="getImage(recipe.img)" class="avatar_mask-receipe" alt="">
                         </td>
                     </tr>
                 </tbody>
@@ -56,14 +61,14 @@
 
 <script>
 import Swal from 'sweetalert2';
-import updateServiceConfig from '../../../config/services';
+import {updateServiceConfig, getImageUrl } from '../../../config/services';
 export default {
     name: 'RecipeMain',
     data() {
         return {
             recipes: {},
             isLoading: false,
-            selectedIngredient: null,
+            selectedIngredient: 0,
             movementIngredients: []
         }
     },
@@ -84,18 +89,22 @@ export default {
                 if (res.data.status) {
                     this.isLoading = false;
                     this.recipes = res.data.recipes;
-                    console.log(this.recipes)
                     this.isLoading = false;
                 }
             }).catch(err => {
                 this.isLoading = false;
                 Swal.fire({
                     icon: 'error',
-                    text: 'Error al registrar.',
+                    text: 'Error en petición.',
                 });
                 console.error(err);
             });
         },
+
+        getImage(image){
+            return getImageUrl(0,image)
+        },
+
         getComplements() {
             updateServiceConfig(0, this.axios);
             this.axios.post('api/recipe/get_complements/', {}).then(res => {
@@ -108,12 +117,13 @@ export default {
                 this.isLoading = false;
                 Swal.fire({
                     icon: 'error',
-                    text: 'Error al registrar.',
+                    text: 'Error en petición.',
                 });
                 console.error(err);
             });
 
         },
+     
 
     }
 

@@ -9,6 +9,36 @@
     height: 50px;
 }
 
+.avatar_mask-receipe{
+    width: 100px;
+    height: 80px;
+    border-radius: 80px;
+    overflow: hidden;
+}
+
+
+#app {
+    font-family: sans-serif, Avenir, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #2c3e50;
+    margin-top: 60px;
+  }
+  
+  body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: rgb(255, 255, 255) !important;
+    font-weight: 200;
+  }
+
+
+.avatar_mask img{
+    height: 50px;
+}
+
 .slider img{
     height: 400px;
 }

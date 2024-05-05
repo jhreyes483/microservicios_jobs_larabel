@@ -24,7 +24,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('/login', [AuthController::class, 'login']);
 
-
+Route::get('/images/{filename}', [OrderController::class, 'getImage']);
 Route::apiResource('orders', OrderController::class)->only([ 'store', 'show'])->middleware('auth:sanctum');
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/get_orders', [OrderController::class, 'index']);
@@ -33,3 +33,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/recipe/get_complements', [RecipeController::class, 'getComplements']);
     Route::post('/job/receive_ingredient', [OrderController::class, 'receiveIngredient']);
 });
+
+

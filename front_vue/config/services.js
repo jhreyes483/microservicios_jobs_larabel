@@ -5,12 +5,11 @@ const state = reactive({
         { baseUrl: 'https://orders-service.fly.dev/', token: 'token1' },
         { baseUrl: 'https://warehouse-ingredients-service.fly.dev/', token: 'token2' },
         { baseUrl: 'https://farmers-market-service.fly.dev/', token: 'token3' },
-        // Agrega más opciones según sea necesario
     ],
-    selectedServiceIndex: 0, // Índice predeterminado
+    selectedServiceIndex: 0,
 });
 
-function updateServiceConfig(index, axios) {
+export function updateServiceConfig(index, axios) {
 
     state.selectedServiceIndex = index;
     // Actualizar la URL base y el token en función del índice
@@ -21,4 +20,12 @@ function updateServiceConfig(index, axios) {
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 }
 
-export default updateServiceConfig;
+export function getUrl(index) {
+    return state.service[index];
+}
+
+export function getImageUrl(index, filename) {
+    return `${state.service[index].baseUrl}api/images/${filename}`;
+}
+
+

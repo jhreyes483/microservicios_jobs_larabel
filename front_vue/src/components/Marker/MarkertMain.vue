@@ -9,7 +9,7 @@
 
         <div v-else>
             <div class="table-responsive mt-2 col-md-11 mx-auto">
-                <button type="submit" @click="submitQuantities()" class="m-3 btn btm-alegra btn-sm">Actualizar</button>
+                <button type="submit" @click="submitQuantities()" class="m-3 btn btm-alegra btn-sm">Actualizar   <i class="fas fa-sync"></i></button>
                 <table class="table table-striped table-hover">
                     <thead>
                         <tr>
@@ -35,10 +35,14 @@
                 </table>
                 <div>
                     <button class="btn btn-sm btn-light" @click="changePage(currentPage - 1)"
-                        :disabled="currentPage === 1">Anterior</button>
+                        :disabled="currentPage === 1">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
                     {{ currentPage }}
                     <button class="btn btn-sm btn-light" @click="changePage(currentPage + 1)"
-                        :disabled="currentPage === lastPage">Siguiente</button>
+                        :disabled="currentPage === lastPage">
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
                 </div>
             </div>
         </div>
@@ -50,7 +54,7 @@
 </template>
 <script>
 import Swal from 'sweetalert2';
-import updateServiceConfig from '../../../config/services';
+import { updateServiceConfig } from '../../../config/services';
 export default {
     name: 'MarkertMain',
     data() {
@@ -76,11 +80,12 @@ export default {
                 this.isLoading = false;
                 Swal.fire({
                     icon: 'error',
-                    text: 'Error al registrar.',
+                    text: 'Error en petición...',
                 });
                 console.error(err);
             });
         },
+        
         submitQuantities() {
             this.isLoading = true;
             updateServiceConfig(2, this.axios);
@@ -96,7 +101,7 @@ export default {
                 this.isLoading = false;
                 Swal.fire({
                     icon: 'error',
-                    text: 'Error al registrar.',
+                    text: 'Error en petición.',
                 });
                 console.error(err);
             });
