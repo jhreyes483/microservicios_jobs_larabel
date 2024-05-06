@@ -22,6 +22,11 @@
 
                             </div>
                         </div>
+
+                         <div class="mx-auto mb-2">
+                            <img :src="getImage(recipe.img)" class="avatar_mask-receipe2" alt="">
+                            
+                         </div>
                     </div>
                 </div>
                 <div class="col-md-8">
@@ -58,7 +63,7 @@
 </template>
 <script>
 import Swal from 'sweetalert2';
-import {updateServiceConfig } from '../../../config/services';
+import {updateServiceConfig, getImageUrl } from '../../../config/services';
 
 export default {
      name: 'OrderDeital',
@@ -87,17 +92,6 @@ export default {
                     this.recipe = res.data.order.recipe;
                     this.ingredients = res.data.order.recipe.ingredients;
                     this.status = res.data.order.status;
-                    console.log("   this.order ", this.order)
-                    console.log("   this.recipe ", this.recipe)
-                    console.log("   status ", this.status)
-                    /*
-                  const url = `/order?id=${res.data.order_id}`;
-                  Swal.fire({
-                    icon: 'success',
-                    text: res.data.msg,
-                    footer: `<a href="${url}">Ver orden</a>`
-                  });
-                  */
                 }
             }).catch(err => {
                 Swal.fire({
@@ -119,7 +113,11 @@ export default {
             };
             const dateTime = new Date(dateTimeString);
             return dateTime.toLocaleString("es-ES", options);
-        }
+        },
+        getImage(image){
+            return getImageUrl(0,image)
+        },
+
 
 
     },

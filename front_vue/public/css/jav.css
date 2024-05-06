@@ -16,6 +16,13 @@
     overflow: hidden;
 }
 
+.avatar_mask-receipe2{
+    width: 210px;
+    height: 160px;
+    border-radius: 80px;
+    overflow: hidden;
+}
+
 .avatar_mask img{
     height: 50px;
 }

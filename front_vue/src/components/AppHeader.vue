@@ -16,45 +16,35 @@
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     </ul>
                     <ul class="navbar-nav navbar-right mr-auto">
-                        <div v-if="!isLoginRoute">
-                            <li v-if="!isToken" class="nav-item">
-                                <router-link active-class="active" to="/" class="nav-link">Login</router-link>
-                            </li>
-                            <li v-else class="nav-item">
-                                <div @click="logout()" class="nav-link">Cerrar sesion</div>
-                            </li>
-                        </div>
-
-                        <li class="nav-item">
+                        <li class="nav-item" v-if="checkToken">
                             <router-link active-class="active" to="/home" class="nav-link">inicio</router-link>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item" v-if="checkToken">
                             <router-link active-class="active" to="/orders" class="nav-link">Ordenes</router-link>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item" v-if="checkToken">
                             <router-link active-class="active" to="/recipe" class="nav-link">Recetas</router-link>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item" v-if="checkToken">
                             <router-link active-class="active" to="/history_movoments" class="nav-link">Historico de
                                 movimientos</router-link>
                         </li>
-
-                        <li class="nav-item">
+                        <li class="nav-item" v-if="checkToken">
                             <router-link active-class="active" to="/purchase" class="nav-link">Historico de
                                 compras</router-link>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item" v-if="checkToken">
                             <router-link active-class="active" to="/marker" class="nav-link">Plaza
                                 inventario</router-link>
+                        </li>
+                        <li v-if="checkToken" class="nav-item">
+                            <div @click="logout()" class="nav-link">Cerrar sesion</div>
                         </li>
                     </ul>
                 </div>
             </div>
         </nav>
-
     </div>
-
-
 </template>
 
 <script>
@@ -62,13 +52,17 @@ import { existToken } from '../polices/auth'
 import Swal from 'sweetalert2';
 export default {
     name: 'AppHeader',
-    computed: {
-        isToken() {
-            return existToken();
-        },
-        isLoginRoute() {
-            return this.$route.path === '/';
+    data() {
+
+        return {
+            checkToken: existToken(),
         }
+
+    },
+    watch: {
+        '$route': function () {
+            this.checkToken = existToken();
+        },
     },
     methods: {
         logout() {
@@ -87,9 +81,16 @@ export default {
                         console.error("Error al navegar:", err);
                     });
                 }
+                this.checkToken = false;
             });
+        },
+        isLoginRoute() {
+            return this.$route.path === '/';
         }
-    }
+
+    },
+
+
 }
 
 </script>

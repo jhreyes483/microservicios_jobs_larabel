@@ -26,7 +26,7 @@
                                     <th>Reintetos</th>
                                     <th>Estado</th>
                                     <th>Tipo</th>
-                                    <th>Creacion</th>
+                                    <th>Creación</th>
                                     <th>Actualización</th>
                                 </tr>
                             </thead>
@@ -81,6 +81,9 @@ export default {
     mounted() {
         this.getPurchases()
         this.getStatuses()
+        this.interval = setInterval(() => {
+            window.location.reload();
+        }, 60000);
     },
     methods: {
         getPurchases() {

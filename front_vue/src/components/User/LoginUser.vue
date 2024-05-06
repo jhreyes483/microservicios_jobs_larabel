@@ -21,11 +21,16 @@
               </div>
               <br>
               <div class="form-group">
-                <button type="submit" class="btn btm-alegra btn-success mt-2"> Ingresar <i
+                <button type="submit" class="btn btm-alegra btn-success mt-2">Ingresar <i
                     class="fas fa-sign-in-alt"></i></button>
               </div>
+
             </form>
           </div>
+        </div>
+        <div v-if="progressBar" class="progress" style="height: 20px;">
+          <div class="progress-bar bg-success" role="progressbar"  :style="{ width: progressBar + '%', 'background-color': '#00b19d' }"
+            aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{ progressBar }}%</div>
         </div>
       </div>
     </div>
@@ -43,8 +48,10 @@ export default {
     return {
       login: {
         email: '',
-        password: ''
-      }
+        password: '',
+      },
+      progressBar: 0,
+      showProgreesbar: false
     }
   },
   methods: {
@@ -62,6 +69,7 @@ export default {
           localStorage.setItem('access_token_' + codeMicoService, response.data.authorisation.token);
           return true;
         } else {
+          this.progressBar = 0;
           Swal.fire({
             icon: 'error',
             text: 'Credenciales incorrectas',
@@ -69,6 +77,7 @@ export default {
           return false;
         }
       } catch (error) {
+        this.progressBar = 0;
         console.error('Login error:', error);
         Swal.fire({
           icon: 'error',
@@ -79,16 +88,39 @@ export default {
     },
 
     async authLogin() {
+      this.showProgreesbar = true
+      this.progressBar = 0;
       let loginSuccess = await this.loginMicroservice(0);
-      if (loginSuccess) loginSuccess = await this.loginMicroservice(1);
-      if (loginSuccess) loginSuccess = await this.loginMicroservice(2);
-      if (loginSuccess) this.$router.push('/home');
+
+      if (loginSuccess) {
+        this.progressBar = 33;
+        loginSuccess = await this.loginMicroservice(1);
+      }
+
+      if (loginSuccess) {
+        this.progressBar = 66;
+        loginSuccess = await this.loginMicroservice(2)
+        this.progressBar = 100;
+
+      }
+      if (loginSuccess) {
+
+        setTimeout(() => {
+          this.$router.push('/home');
+        }, 200);
+
+
+      }
+
     }
   }
 }
+
 </script>
 
 <style>
+
+
 .btm-alegra {
   background-color: #30aba9 !important;
   color: #ffff;
