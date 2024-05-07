@@ -21,7 +21,7 @@
               </div>
               <br>
               <div class="form-group">
-                <button type="submit" class="btn btm-alegra btn-success mt-2 py-3 px-4 ">Ingresar <i
+                <button type="submit" class="btn btm-alegra btn-success mt-2 py-2 px-4 ">Ingresar <i
                     class="fas fa-sign-in-alt"></i></button>
               </div>
 
