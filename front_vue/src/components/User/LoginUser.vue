@@ -3,34 +3,38 @@
     <div class="row justify-content-center">
       <div class="col-md-6 mt-4">
         <div class="mt-4">
-          <div class="card-body">
-            <h5 class="card-title text-center"><b>Iniciar Sesión</b></h5>
+          <div class="card-body login-style">
+            <h5 class="card-title text-center"><b>Iniciar sesión</b></h5>
             <form @submit.prevent="authLogin()" method="post">
 
               <br>
               <div class="form-group">
-                <label for="email">Correo Electrónico:</label>
+                <label class="mb-2" for="email">Correo Electrónico:</label>
                 <input id="email" name="email" v-model.trim="login.email" class="form-control" type="text"
                   placeholder="Correo electrónico" autocomplete="off" required>
               </div>
               <br>
-              <div class="form-group">
-                <label for="password">Contraseña:</label>
+              <div  class="form-group">
+                <label class="mb-2"  for="password">Contraseña:</label>
                 <input id="password" name="password" v-model.trim="login.password" type="password" class="form-control"
                   placeholder="Contraseña" required>
               </div>
               <br>
               <div class="form-group">
-                <button type="submit" class="btn btm-alegra btn-success mt-2">Ingresar <i
+                <button type="submit" class="btn btm-alegra btn-success mt-2 py-3 px-4 ">Ingresar <i
                     class="fas fa-sign-in-alt"></i></button>
               </div>
 
             </form>
           </div>
         </div>
-        <div v-if="progressBar" class="progress" style="height: 20px;">
-          <div class="progress-bar bg-success" role="progressbar"  :style="{ width: progressBar + '%', 'background-color': '#00b19d' }"
-            aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{ progressBar }}%</div>
+        <div v-if="progressBar" class="text-center mt-3">
+          <p>Cargando...</p>
+          <div class="progress mt-3" style="height: 20px;">
+            <div class="progress-bar bg-progress-bar" role="progressbar"
+              :style="{ width: progressBar + '%', 'background-color': '#00b19d' }" aria-valuenow="25" aria-valuemin="0"
+              aria-valuemax="100">{{ progressBar }}%</div>
+          </div>
         </div>
       </div>
     </div>
@@ -119,11 +123,19 @@ export default {
 </script>
 
 <style>
-
+.bg-progress-bar {
+  background-color: #30aba9;
+}
 
 .btm-alegra {
   background-color: #30aba9 !important;
   color: #ffff;
+}
+
+.login-style {
+  border: 1px solid #30aba9;
+  padding: 11%;
+  border-radius: 10px;
 }
 
 
