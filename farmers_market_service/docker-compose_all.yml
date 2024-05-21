@@ -1,0 +1,103 @@
+version: '3.8'
+
+networks:
+  infrastucture_network:
+
+services:
+
+  os_mysql:
+    env_file:
+      - .env
+    container_name: 'os_mysql'
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      # MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_HOST: '%'
+    ports:
+      - "3310:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - infrastucture_network
+
+  os_office:
+    env_file:
+      - .env
+    container_name : os_office
+    build:
+      args:
+        user: laraveluser
+        uid: 1000
+      context: .
+      dockerfile: Dockerfile.loc
+    ports:
+      - "8001:80"
+    volumes:
+      - .:/var/www/html
+    environment:
+      - DB_PORT=3310
+      - DB_DATABASE=${DB_DATABASE}
+      - DB_HOST=os_mysql
+      - DB_PASSWORD= ${DB_PASSWORD}
+      - DB_USERNAME=${DB_USERNAME}
+      ############################################
+      - APACHE_RUN_USER=www-data
+      - APACHE_RUN_GROUP=www-data
+      - APP_URL=http://localhost:8001
+      - APP_ENV=production
+      - LOG_CHANNEL=stderr
+      - LOG_LEVEL=info
+      - LOG_STDERR_FORMATTER=Monolog\Formatter\JsonFormatter
+      - SESSION_DRIVER=cookie
+      - SESSION_SECURE_COOKIE=true
+      - DB_CONNECTION=mysql
+      - URL_WAREHOUSE_INGREDIENTS_SERVICE=https://warehouse-ingredients-service.fly.dev/
+      - URL_MARKER_INGREDIENTS_SERVICE=https://farmers-market-service.fly.dev/
+      - APP_TIMEZONE=America/Bogota
+    depends_on:
+      - os_mysql
+    command: bash -c "php artisan migrate --force && apache2-foreground"
+    
+    networks:
+      - infrastucture_network
+
+  #os_phpmyadmin:
+    #env_file:
+      #- .env
+    #container_name: os_phpmyadmin
+    #image: phpmyadmin/phpmyadmin
+    #tty: true
+    #environment:
+      #- PMA_ARBITRARY=1
+      #- PMA_HOST=os_mysql
+      #- PMA_USER=${DB_USERNAME}
+      #- PMA_PASSWORD=${DB_PASSWORD}
+      #- PMA_PORT=3306
+    #depends_on:
+      #- os_office
+    #ports:
+      #- "8089:80"
+    #networks:
+      #- infrastucture_network
+
+  #os_nginx:
+    #image: nginx:alpine
+    #container_name: os_nginx
+    #restart: unless-stopped
+    #tty: true
+    #ports:
+      #- "8081:8081"
+    #volumes:
+      #- ./:/var/www/html
+      #- ./ci/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    #depends_on:
+      #- os_office
+    #networks:
+      #- infrastucture_network
+
+volumes:
+  mysql_data:

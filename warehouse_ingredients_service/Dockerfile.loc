@@ -1,0 +1,50 @@
+FROM php:apache
+
+RUN apt-get update && \
+    apt-get install -y zlib1g-dev libzip-dev \
+    git \
+    zip \
+    libonig-dev \
+    libxml2-dev \
+    libgd3 \
+    libgd-dev \
+    curl \
+    nano
+
+RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath opcache gd zip mysqli
+
+RUN a2enmod rewrite
+
+RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
+    php composer-setup.php --install-dir=/usr/local/bin --filename=composer && \
+    php -r "unlink('composer-setup.php');"
+
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && apt-get install -y nodejs
+
+RUN apt-get install -y cron
+
+# Install cron and start cron service
+RUN apt-get update && apt-get install -y cron \
+    && echo "MAILTO=\"\"\n* * * * * www-data /usr/bin/php /var/www/html/artisan schedule:run >> /dev/null 2>&1" | crontab - \
+    && service cron start
+
+
+# Install cron and start cron service JOBS
+COPY cronfile /etc/cron.d/laravel-cron
+RUN apt-get update && apt-get install -y cron \
+    && chmod 0644 /etc/cron.d/laravel-cron \
+    && crontab /etc/cron.d/laravel-cron \
+    && service cron start
+
+
+
+
+
+
+RUN sed -i 's|/var/www/html|/var/www/html/public|' /etc/apache2/sites-available/000-default.conf && \
+    sed -i 's|AllowOverride None|AllowOverride All|' /etc/apache2/apache2.conf
+
+WORKDIR /var/www/html
+
+EXPOSE 80
+CMD ["apache2-foreground", "sh", "-c", "php artisan schedule:work && php-fpm"]
